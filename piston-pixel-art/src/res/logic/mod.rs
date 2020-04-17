@@ -1,1 +1,1 @@
-pub mod image_writer;
+pub mod image_operation;

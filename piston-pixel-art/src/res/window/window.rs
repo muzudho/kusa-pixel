@@ -1,6 +1,7 @@
 extern crate find_folder;
 extern crate piston_window;
 
+use crate::res::logic::image_operation::*;
 use piston_window::*;
 
 pub fn show_window(png_path: &str) {
@@ -11,24 +12,20 @@ pub fn show_window(png_path: &str) {
         .build()
         .unwrap();
 
-    let assets = find_folder::Search::ParentsThenKids(3, 3)
-        .for_folder("assets")
-        .unwrap();
-    let rust_logo = assets.join(png_path);
-    let rust_logo: G2dTexture = Texture::from_path(
-        &mut window.create_texture_context(),
-        &rust_logo,
-        Flip::None,
-        &TextureSettings::new(),
-    )
-    .unwrap();
+    let texture = create_texture(png_path, &mut window);
 
     // Event loop.
     window.set_lazy(true);
     while let Some(e) = window.next() {
+        // update
+        if let Some(_button) = e.press_args() {
+            println!("ボタンが押されたぜ☆（＾～＾）");
+        }
+
+        // draw
         window.draw_2d(&e, |c, g, _| {
             clear([1.0; 4], g);
-            image(&rust_logo, c.transform, g);
+            image(&texture, c.transform.zoom(2.0), g);
         });
     }
 }
