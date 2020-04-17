@@ -2,9 +2,10 @@ extern crate find_folder;
 extern crate piston_window;
 
 use crate::res::logic::image_operation::*;
+use crate::res::settings::Settings;
 use piston_window::*;
 
-pub fn show_window(png_path: &str) {
+pub fn show_window(settings: &Settings) {
     let opengl = OpenGL::V3_2;
     let mut window: PistonWindow = WindowSettings::new("piston: image", [300, 300])
         .exit_on_esc(true)
@@ -12,7 +13,7 @@ pub fn show_window(png_path: &str) {
         .build()
         .unwrap();
 
-    let texture = create_texture(png_path, &mut window);
+    let texture = create_texture(&settings.file, &mut window);
     let mut cursor = [0.0, 0.0];
 
     // Event loop.
@@ -41,6 +42,42 @@ pub fn show_window(png_path: &str) {
                 c.transform,
                 g,
             );
+
+            // キャンバス幅
+            let canvas_width = settings.width as f64 * settings.canvas_dot_width;
+            let canvas_height = settings.height as f64 * settings.canvas_dot_height;
+
+            // タテ線
+            for col in 0..(settings.width + 1) {
+                line(
+                    settings.canvas_grid_color,
+                    settings.canvas_grid_thickness, // radius
+                    [
+                        col as f64 * settings.canvas_dot_width + settings.canvas_margin_x,
+                        settings.canvas_margin_y,
+                        col as f64 * settings.canvas_dot_width + settings.canvas_margin_x,
+                        settings.canvas_margin_y + canvas_height,
+                    ],
+                    c.transform,
+                    g,
+                );
+            }
+
+            // ヨコ線
+            for row in 0..(settings.height + 1) {
+                line(
+                    settings.canvas_grid_color,
+                    settings.canvas_grid_thickness, // radius
+                    [
+                        settings.canvas_margin_x,
+                        row as f64 * settings.canvas_dot_height + settings.canvas_margin_y,
+                        settings.canvas_margin_x + canvas_width,
+                        row as f64 * settings.canvas_dot_height + settings.canvas_margin_y,
+                    ],
+                    c.transform,
+                    g,
+                );
+            }
         });
     }
 }

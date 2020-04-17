@@ -9,6 +9,7 @@ destination = 'C:/Users/むずでょ/Documents/GitHub/piston-pixel-art-drawing-t
 
 def go():
     print('Trace   | Copy.')
+    copy_dir('/.vscode')
     copy_dir('/@not-runtime')
     copy_dir('/piston-pixel-art',
              ignore=shutil.ignore_patterns('.git', 'target'))

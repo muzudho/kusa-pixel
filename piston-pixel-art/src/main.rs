@@ -6,7 +6,7 @@ mod res;
 
 use crate::res::image::Frame;
 use crate::res::logic::image_operation::*;
-use crate::res::settings::*;
+use crate::res::settings::Settings;
 use crate::res::window::window::*;
 
 fn main() {
@@ -19,5 +19,5 @@ fn main() {
         write_frame(&frame, &settings.file);
     }
 
-    show_window(&settings.file);
+    show_window(&settings);
 }

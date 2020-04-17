@@ -2,5 +2,16 @@
     "file": "output/test_test.png",
     "width": 32,
     "height": 64,
-    "zoom": 2
+    "zoom": 2,
+    "canvas_margin_x": 20.0,
+    "canvas_margin_y": 10.0,
+    "canvas_dot_width": 10.0,
+    "canvas_dot_height": 10.0,
+    "canvas_grid_thickness": 0.5,
+    "canvas_grid_color": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+    ]
 }
