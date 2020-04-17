@@ -1,10 +1,9 @@
+use crate::res::image::{Dot, Frame};
 use crate::res::logic::image_operation::*;
 use crate::res::settings::Settings;
-// use gfx::*;
-// use gfx_device_gl::*;
 use piston_window::*;
 
-pub fn show_window(settings: &Settings) {
+pub fn show_window(settings: &Settings, frame: &mut Frame) {
     let opengl = OpenGL::V3_2;
     let mut window: PistonWindow = WindowSettings::new("piston: image", [300, 300])
         .exit_on_esc(true)
@@ -38,7 +37,10 @@ pub fn show_window(settings: &Settings) {
         // update
         if let Some(_button) = e.press_args() {
             println!("ボタンが押されたぜ☆（＾～＾）");
-            println!("Click ({}, {})", cursor[0], cursor[1]);
+            frame.set_dot(col as u32, row as u32, &Dot::new(255, 0, 0, 255));
+
+            println!("Click ({}, {}) 保存", cursor[0], cursor[1]);
+            write_frame(&frame, &settings.file);
         }
 
         // draw
