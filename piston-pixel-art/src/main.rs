@@ -20,13 +20,16 @@ use std::path::Path;
 
 fn main() {
     // 設定ファイルを読み込もうぜ☆（＾～＾）
-    let settings = Settings::load();
+    let mut settings = Settings::load();
 
     // 画像読込を試みようぜ☆（＾～＾）？
     let mut frame = match image::open(Path::new("assets").join(&settings.file)) {
         Ok(img) => {
             // 画像を読み込んで始まりたいぜ☆（＾～＾）
-            Frame::load_image(&img)
+            let frame = Frame::load_image(&img);
+            settings.width = frame.width;
+            settings.height = frame.height;
+            frame
         }
         Err(_e) => {
             // 画像が読み込めなければ、設定ファイルで指定されたサイズで新規作成☆（＾～＾）

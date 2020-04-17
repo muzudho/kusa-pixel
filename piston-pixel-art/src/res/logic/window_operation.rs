@@ -73,6 +73,23 @@ pub fn show_window(settings: &Settings, frame: &mut Frame) {
             let canvas_width = settings.width as f64 * settings.canvas_dot_width;
             let canvas_height = settings.height as f64 * settings.canvas_dot_height;
 
+            // 各マスに色を打っていくぜ☆（＾～＾）
+            // タテへ
+            for row in 0..settings.height {
+                // ヨコへ
+                for col in 0..settings.width {
+                    let dot = frame.get_dot(col, row);
+                    let x = col as f64 * settings.canvas_dot_width + settings.canvas_margin_x;
+                    let y = row as f64 * settings.canvas_dot_height + settings.canvas_margin_y;
+                    rectangle(
+                        dot.rate_array(),
+                        [x, y, settings.canvas_dot_width, settings.canvas_dot_height],
+                        c.transform,
+                        g,
+                    );
+                }
+            }
+
             // タテ線
             for col in 0..(settings.width + 1) {
                 line(

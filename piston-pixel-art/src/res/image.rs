@@ -41,8 +41,22 @@ impl Frame {
         vec
     }
 
+    pub fn to_index(col: u32, row: u32, width: u32, height: u32) -> usize {
+        if width <= col || height <= row {
+            panic!(
+                "Out of index. width,height({},{}) col,row({},{})",
+                width, height, col, row
+            );
+        }
+        (row * width + col) as usize
+    }
+
     pub fn set_dot(&mut self, col: u32, row: u32, dot: &Dot) {
-        self.dots[(row * self.width + col) as usize] = dot.clone();
+        self.dots[Frame::to_index(col, row, self.width, self.height)] = dot.clone();
+    }
+
+    pub fn get_dot(&self, col: u32, row: u32) -> &Dot {
+        &self.dots[Frame::to_index(col, row, self.width, self.height)]
     }
 }
 
@@ -65,6 +79,15 @@ impl Dot {
 
     pub fn array(&self) -> [u8; 4] {
         [self.r, self.g, self.b, self.a]
+    }
+
+    pub fn rate_array(&self) -> [f32; 4] {
+        [
+            self.r as f32 / 255f32,
+            self.g as f32 / 255f32,
+            self.b as f32 / 255f32,
+            self.a as f32 / 255f32,
+        ]
     }
 }
 impl Default for Dot {
