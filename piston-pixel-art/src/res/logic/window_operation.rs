@@ -1,8 +1,7 @@
-extern crate find_folder;
-extern crate piston_window;
-
 use crate::res::logic::image_operation::*;
 use crate::res::settings::Settings;
+// use gfx::*;
+// use gfx_device_gl::*;
 use piston_window::*;
 
 pub fn show_window(settings: &Settings) {
@@ -15,6 +14,16 @@ pub fn show_window(settings: &Settings) {
 
     let texture = create_texture(&settings.file, &mut window);
     let mut cursor = [0.0, 0.0];
+    let mut col = 0;
+    let mut row = 0;
+
+    let assets = find_folder::Search::ParentsThenKids(3, 3)
+        .for_folder("assets")
+        .unwrap();
+    println!("{:?}", assets);
+    let mut glyphs = window
+        .load_font(assets.join("font/NotoSans-Medium.ttf"))
+        .unwrap();
 
     // Event loop.
     window.set_lazy(true);
@@ -22,7 +31,8 @@ pub fn show_window(settings: &Settings) {
         // マウスカーソルの座標を補足するぜ☆（＾～＾）
         e.mouse_cursor(|pos| {
             cursor = pos;
-            // println!("Mouse moved '{} {}'", pos[0], pos[1]);
+            col = ((cursor[0] - settings.canvas_margin_x) / settings.canvas_dot_width) as i32;
+            row = ((cursor[1] - settings.canvas_margin_y) / settings.canvas_dot_height) as i32;
         });
 
         // update
@@ -32,7 +42,7 @@ pub fn show_window(settings: &Settings) {
         }
 
         // draw
-        window.draw_2d(&e, |c, g, _| {
+        window.draw_2d(&e, |c, g, device| {
             clear([1.0; 4], g);
             image(&texture, c.transform.zoom(2.0), g);
 
@@ -42,6 +52,20 @@ pub fn show_window(settings: &Settings) {
                 c.transform,
                 g,
             );
+
+            // TODO 座標を表示したいぜ☆（＾～＾）
+            text::Text::new_color([0.0, 0.0, 0.0, 1.0], 32)
+                .draw(
+                    &format!("pos({}, {})", col, row),
+                    &mut glyphs,
+                    &c.draw_state,
+                    c.transform.trans(10.0, 30.0), // y位置を揃えるのはむずかしいぜ☆（＾～＾）
+                    g,
+                )
+                .unwrap();
+
+            // Update glyphs before rendering.
+            glyphs.factory.encoder.flush(device);
 
             // キャンバス幅
             let canvas_width = settings.width as f64 * settings.canvas_dot_width;
