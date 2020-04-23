@@ -47,31 +47,59 @@ pub struct Sizing {
 }
 impl Sizing {
     pub fn diff(cursor: &Pointing, pressed_pos: &Pointing) -> Self {
-        Sizing {
+        let sizing = Sizing {
             width: cursor.x - pressed_pos.x,
             height: cursor.y - pressed_pos.y,
             cols: cursor.col - pressed_pos.col,
             rows: cursor.row - pressed_pos.row,
-        }
+        };
+        println!(
+            "Trace   | diff cursor={:?} pressed_pos={:?} sizing={:?} long_edge_sign={} long_edge_cell_abs={}",
+            cursor,
+            pressed_pos,
+            sizing,
+            sizing.long_edge_sign(),
+            sizing.long_edge_cells_abs()
+        );
+        sizing
     }
 
-    pub fn is_longer_width(&self) -> bool {
-        self.height < self.width
+    pub fn is_longer_edge_abs(&self) -> bool {
+        self.height.abs() < self.width.abs()
     }
 
     pub fn get_a(&self) -> f64 {
-        if self.is_longer_width() {
+        if self.is_longer_edge_abs() {
             self.height as f64 / self.width as f64
         } else {
             self.width as f64 / self.height as f64
         }
     }
 
-    pub fn long_len(&self) -> usize {
-        if self.is_longer_width() {
-            self.width as usize
+    /*
+    pub fn long_edge_pixels_abs(&self) -> usize {
+        if self.is_longer_width_abs() {
+            self.width.abs() as usize
         } else {
-            self.height as usize
+            self.height.abs() as usize
+        }
+    }
+    */
+
+    pub fn long_edge_cells_abs(&self) -> usize {
+        if self.is_longer_edge_abs() {
+            self.cols.abs() as usize
+        } else {
+            self.rows.abs() as usize
+        }
+    }
+
+    /// 長い方の辺の正負を返します。 1 or -1.
+    pub fn long_edge_sign(&self) -> f64 {
+        if self.is_longer_edge_abs() {
+            self.width / self.width.abs()
+        } else {
+            self.height / self.height.abs()
         }
     }
 }

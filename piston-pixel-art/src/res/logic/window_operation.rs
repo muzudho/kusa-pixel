@@ -2,7 +2,7 @@ use crate::res::image::{Dot, Frame};
 use crate::res::logic::image_operation::*;
 use crate::res::pointing::{Pointing, Sizing};
 use crate::res::settings::Settings;
-// use gfx::state::RasterMethod::Point;
+use crate::res::tool::Pen;
 use piston_window::*;
 
 pub fn show_window(mut settings: Settings, frame: &mut Frame) {
@@ -52,35 +52,11 @@ pub fn show_window(mut settings: Settings, frame: &mut Frame) {
         }
 
         if let Some(_button) = e.release_args() {
+            println!("Trace   | ボタンを離したぜ☆（＾～＾）");
             let sizing = Sizing::diff(&cursor, &pressed_pos);
-            println!(
-                "Trace   | ボタンを離したぜ☆（＾～＾） cur={:?}, pressed={:?}, sizing={:?}",
-                cursor, pressed_pos, sizing
-            );
 
-            if sizing.is_longer_width() {
-                // 横幅の方が長ければ。
-                for col in 1..(sizing.long_len() + 1) {
-                    let row = sizing.get_a() * col as f64;
-                    // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
-                    frame.set_dot(
-                        (pressed_pos.col + col as i32) as u32,
-                        (pressed_pos.row + row as i32) as u32,
-                        &Dot::new(255, 0, 0, 255),
-                    );
-                }
-            } else {
-                // 縦幅の方が長いか同じなら。
-                for row in 1..(sizing.long_len() + 1) {
-                    let col = sizing.get_a() * row as f64;
-                    // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
-                    frame.set_dot(
-                        (pressed_pos.col + col as i32) as u32,
-                        (pressed_pos.row + row as i32) as u32,
-                        &Dot::new(255, 0, 0, 255),
-                    );
-                }
-            }
+            // 線を引きます。
+            Pen::draw(frame, &pressed_pos, &sizing);
 
             println!("Trace   | Click ({}, {}) 保存", &cursor.x, &cursor.y);
             write_frame(&frame, &settings.file);
