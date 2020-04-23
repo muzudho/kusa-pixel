@@ -1,6 +1,8 @@
 use crate::res::image::{Dot, Frame};
 use crate::res::logic::image_operation::*;
+use crate::res::pointing::{Pointing, Sizing};
 use crate::res::settings::Settings;
+// use gfx::state::RasterMethod::Point;
 use piston_window::*;
 
 pub fn show_window(mut settings: Settings, frame: &mut Frame) {
@@ -12,9 +14,8 @@ pub fn show_window(mut settings: Settings, frame: &mut Frame) {
         .unwrap();
 
     let texture = create_texture(&settings.file, &mut window);
-    let mut cursor = [0.0, 0.0];
-    let mut col = 0;
-    let mut row = 0;
+    let mut cursor = Pointing::default();
+    let mut pressed_pos = cursor;
 
     let assets = find_folder::Search::ParentsThenKids(3, 3)
         .for_folder("assets")
@@ -41,45 +42,95 @@ pub fn show_window(mut settings: Settings, frame: &mut Frame) {
         count += 1;
         // マウスカーソルの座標を補足するぜ☆（＾～＾）
         e.mouse_cursor(|pos| {
-            cursor = pos;
-            col = ((cursor[0] - settings.canvas_margin_x) / settings.canvas_dot_width) as i32;
-            row = ((cursor[1] - settings.canvas_margin_y) / settings.canvas_dot_height) as i32;
+            cursor = Pointing::from_pos(pos, &settings);
         });
 
-        // update
+        // Pressed
         if let Some(_button) = e.press_args() {
-            // println!("Trace   | ボタンが押されたぜ☆（＾～＾）");
-            frame.set_dot(col as u32, row as u32, &Dot::new(255, 0, 0, 255));
+            pressed_pos = cursor.clone();
+            println!("Trace   | ボタンが押されたぜ☆（＾～＾） {:?}", pressed_pos);
+        }
 
-            println!("Trace   | Click ({}, {}) 保存", cursor[0], cursor[1]);
+        if let Some(_button) = e.release_args() {
+            let sizing = Sizing::diff(&cursor, &pressed_pos);
+            println!(
+                "Trace   | ボタンを離したぜ☆（＾～＾） cur={:?}, pressed={:?}, sizing={:?}",
+                cursor, pressed_pos, sizing
+            );
+
+            if sizing.is_longer_width() {
+                // 横幅の方が長ければ。
+                for col in 1..(sizing.long_len() + 1) {
+                    let row = sizing.get_a() * col as f64;
+                    // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
+                    frame.set_dot(
+                        (pressed_pos.col + col as i32) as u32,
+                        (pressed_pos.row + row as i32) as u32,
+                        &Dot::new(255, 0, 0, 255),
+                    );
+                }
+            } else {
+                // 縦幅の方が長いか同じなら。
+                for row in 1..(sizing.long_len() + 1) {
+                    let col = sizing.get_a() * row as f64;
+                    // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
+                    frame.set_dot(
+                        (pressed_pos.col + col as i32) as u32,
+                        (pressed_pos.row + row as i32) as u32,
+                        &Dot::new(255, 0, 0, 255),
+                    );
+                }
+            }
+
+            println!("Trace   | Click ({}, {}) 保存", &cursor.x, &cursor.y);
             write_frame(&frame, &settings.file);
         }
 
         // draw
         window.draw_2d(&e, |c, g, device| {
             clear([1.0; 4], g);
-            image(&texture, c.transform.zoom(2.0), g);
 
-            rectangle(
-                [1.0, 0.0, 0.0, 1.0], // red
-                [cursor[0], cursor[1], 100.0, 100.0],
-                c.transform,
-                g,
-            );
+            // 線を引くのではなく、画像を丸ごと再描画します。
+            image(&texture, c.transform.zoom(settings.zoom), g);
 
-            // TODO 座標を表示したいぜ☆（＾～＾）
-            text::Text::new_color([0.0, 0.0, 0.0, 1.0], 32)
-                .draw(
-                    &format!("pos({}, {})", col, row),
-                    &mut glyphs,
-                    &c.draw_state,
-                    c.transform.trans(10.0, 30.0), // y位置を揃えるのはむずかしいぜ☆（＾～＾）
-                    g,
-                )
-                .unwrap();
+            // 点を１個描くぜ☆（＾～＾）データとしての保存は別のところでやってるぜ☆（＾～＾）
+            // let sizing = Sizing::diff(&cursor, &pressed_pos);
 
-            // Update glyphs before rendering.
-            glyphs.factory.encoder.flush(device);
+            /*
+            if sizing.is_longer_width() {
+                // 横幅の方が長ければ。
+                for col in 1..(sizing.long_len() + 1) {
+                    let y = sizing.get_a() * col as f64;
+                    rectangle(
+                        [1.0, 0.0, 0.0, 1.0], // red
+                        [
+                            pressed_pos.x + sizing.width,
+                            pressed_pos.y + y,
+                            100.0,
+                            100.0,
+                        ],
+                        c.transform,
+                        g,
+                    );
+                }
+            } else {
+                // 縦幅の方が長いか同じなら。
+                for row in 1..(sizing.long_len() + 1) {
+                    let x = sizing.get_a() * row as f64;
+                    rectangle(
+                        [1.0, 0.0, 0.0, 1.0], // red
+                        [
+                            pressed_pos.x + x,
+                            pressed_pos.y + sizing.height,
+                            100.0,
+                            100.0,
+                        ],
+                        c.transform,
+                        g,
+                    );
+                }
+            }
+            */
 
             // キャンバス幅
             let canvas_width = settings.width as f64 * settings.canvas_dot_width;
@@ -133,6 +184,20 @@ pub fn show_window(mut settings: Settings, frame: &mut Frame) {
                     g,
                 );
             }
+
+            // TODO 座標を表示したいぜ☆（＾～＾）
+            text::Text::new_color([0.0, 0.0, 0.0, 1.0], 32)
+                .draw(
+                    &format!("cell({}, {})", cursor.x, cursor.y),
+                    &mut glyphs,
+                    &c.draw_state,
+                    c.transform.trans(10.0, 30.0), // y位置を揃えるのはむずかしいぜ☆（＾～＾）
+                    g,
+                )
+                .unwrap();
+
+            // Update glyphs before rendering.
+            glyphs.factory.encoder.flush(device);
         });
     }
 }

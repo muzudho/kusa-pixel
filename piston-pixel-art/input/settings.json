@@ -1,8 +1,8 @@
 {
     "file": "output/test_test.png",
-    "width": 32,
-    "height": 64,
-    "zoom": 2,
+    "width": 64,
+    "height": 96,
+    "zoom": 1.0,
     "canvas_margin_x": 20.0,
     "canvas_margin_y": 10.0,
     "canvas_dot_width": 10.0,
