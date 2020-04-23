@@ -39,5 +39,5 @@ fn main() {
         }
     };
 
-    show_window(&settings, &mut frame);
+    show_window(settings, &mut frame);
 }

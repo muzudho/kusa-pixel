@@ -3,7 +3,7 @@ use crate::res::logic::image_operation::*;
 use crate::res::settings::Settings;
 use piston_window::*;
 
-pub fn show_window(settings: &Settings, frame: &mut Frame) {
+pub fn show_window(mut settings: Settings, frame: &mut Frame) {
     let opengl = OpenGL::V3_2;
     let mut window: PistonWindow = WindowSettings::new("piston: image", [300, 300])
         .exit_on_esc(true)
@@ -24,9 +24,21 @@ pub fn show_window(settings: &Settings, frame: &mut Frame) {
         .load_font(assets.join("font/NotoSans-Medium.ttf"))
         .unwrap();
 
+    let mut count: u64 = 0;
     // Event loop.
     window.set_lazy(true);
     while let Some(e) = window.next() {
+        if count % 1000 == 999 {
+            // ミリ秒の取り方が分からなかったぜ☆（＾～＾）
+            // イベント・ループの中で　ファイル入出力するのは　クソだが　使い慣れてないんで仕方ないぜ☆（＾～＾）
+            // 設定ファイルを監視するぜ☆（＾～＾）
+            settings = Settings::load();
+            println!(
+                "Trace   | Load settings☆（＾～＾） tool=|{}|",
+                settings.tool
+            );
+        }
+        count += 1;
         // マウスカーソルの座標を補足するぜ☆（＾～＾）
         e.mouse_cursor(|pos| {
             cursor = pos;
@@ -36,10 +48,10 @@ pub fn show_window(settings: &Settings, frame: &mut Frame) {
 
         // update
         if let Some(_button) = e.press_args() {
-            println!("ボタンが押されたぜ☆（＾～＾）");
+            // println!("Trace   | ボタンが押されたぜ☆（＾～＾）");
             frame.set_dot(col as u32, row as u32, &Dot::new(255, 0, 0, 255));
 
-            println!("Click ({}, {}) 保存", cursor[0], cursor[1]);
+            println!("Trace   | Click ({}, {}) 保存", cursor[0], cursor[1]);
             write_frame(&frame, &settings.file);
         }
 
