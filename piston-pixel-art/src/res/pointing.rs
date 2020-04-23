@@ -46,6 +46,14 @@ pub struct Sizing {
     pub rows: i32,
 }
 impl Sizing {
+    pub fn load_canvas(settings: &Settings) -> Self {
+        Sizing {
+            width: settings.width as f64 * settings.canvas_dot_width,
+            height: settings.height as f64 * settings.canvas_dot_height,
+            cols: settings.width as i32,
+            rows: settings.height as i32,
+        }
+    }
     pub fn diff(cursor: &Pointing, pressed_pos: &Pointing) -> Self {
         let sizing = Sizing {
             width: cursor.x - pressed_pos.x,

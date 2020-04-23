@@ -1,6 +1,6 @@
 use crate::res::image::Frame;
 use image::{save_buffer, ColorType};
-use piston_window::{Flip, G2dTexture, PistonWindow, Texture, TextureSettings};
+// use piston_window::{Flip, G2dTexture, PistonWindow, Texture, TextureSettings};
 use std::path::Path;
 
 pub fn write_frame(frame: &Frame, path: &str) {
@@ -14,6 +14,7 @@ pub fn write_frame(frame: &Frame, path: &str) {
     .unwrap();
 }
 
+/*
 pub fn create_texture(png_path: &str, window: &mut PistonWindow) -> G2dTexture {
     let assets = find_folder::Search::ParentsThenKids(3, 3)
         .for_folder("assets")
@@ -27,3 +28,4 @@ pub fn create_texture(png_path: &str, window: &mut PistonWindow) -> G2dTexture {
     )
     .unwrap()
 }
+*/

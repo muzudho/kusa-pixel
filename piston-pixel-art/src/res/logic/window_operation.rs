@@ -1,8 +1,9 @@
-use crate::res::image::{Dot, Frame};
+use crate::res::grid::Grid;
+use crate::res::image::Frame;
 use crate::res::logic::image_operation::*;
 use crate::res::pointing::{Pointing, Sizing};
 use crate::res::settings::Settings;
-use crate::res::tool::Pen;
+use crate::res::tool::{Image, Pen};
 use piston_window::*;
 
 pub fn show_window(mut settings: Settings, frame: &mut Frame) {
@@ -13,7 +14,7 @@ pub fn show_window(mut settings: Settings, frame: &mut Frame) {
         .build()
         .unwrap();
 
-    let texture = create_texture(&settings.file, &mut window);
+    // let texture = create_texture(&settings.file, &mut window);
     let mut cursor = Pointing::default();
     let mut pressed_pos = cursor;
 
@@ -56,7 +57,7 @@ pub fn show_window(mut settings: Settings, frame: &mut Frame) {
             let sizing = Sizing::diff(&cursor, &pressed_pos);
 
             // 線を引きます。
-            Pen::draw(frame, &pressed_pos, &sizing);
+            Pen::set_dots(frame, &pressed_pos, &sizing);
 
             println!("Trace   | Click ({}, {}) 保存", &cursor.x, &cursor.y);
             write_frame(&frame, &settings.file);
@@ -66,8 +67,10 @@ pub fn show_window(mut settings: Settings, frame: &mut Frame) {
         window.draw_2d(&e, |c, g, device| {
             clear([1.0; 4], g);
 
-            // 線を引くのではなく、画像を丸ごと再描画します。
+            /*
+            // 画像を丸ごと再描画します。
             image(&texture, c.transform.zoom(settings.zoom), g);
+            */
 
             // 点を１個描くぜ☆（＾～＾）データとしての保存は別のところでやってるぜ☆（＾～＾）
             // let sizing = Sizing::diff(&cursor, &pressed_pos);
@@ -108,58 +111,13 @@ pub fn show_window(mut settings: Settings, frame: &mut Frame) {
             }
             */
 
-            // キャンバス幅
-            let canvas_width = settings.width as f64 * settings.canvas_dot_width;
-            let canvas_height = settings.height as f64 * settings.canvas_dot_height;
-
             // 各マスに色を打っていくぜ☆（＾～＾）
-            // タテへ
-            for row in 0..settings.height {
-                // ヨコへ
-                for col in 0..settings.width {
-                    let dot = frame.get_dot(col, row);
-                    let x = col as f64 * settings.canvas_dot_width + settings.canvas_margin_x;
-                    let y = row as f64 * settings.canvas_dot_height + settings.canvas_margin_y;
-                    rectangle(
-                        dot.rate_array(),
-                        [x, y, settings.canvas_dot_width, settings.canvas_dot_height],
-                        c.transform,
-                        g,
-                    );
-                }
-            }
+            Image::draw(&settings, &frame, &c, g);
 
-            // タテ線
-            for col in 0..(settings.width + 1) {
-                line(
-                    settings.canvas_grid_color,
-                    settings.canvas_grid_thickness, // radius
-                    [
-                        col as f64 * settings.canvas_dot_width + settings.canvas_margin_x,
-                        settings.canvas_margin_y,
-                        col as f64 * settings.canvas_dot_width + settings.canvas_margin_x,
-                        settings.canvas_margin_y + canvas_height,
-                    ],
-                    c.transform,
-                    g,
-                );
-            }
+            // TODO 今引こうとしている線を、データに描き込まずに画面に表示したいぜ☆（＾～＾）
 
-            // ヨコ線
-            for row in 0..(settings.height + 1) {
-                line(
-                    settings.canvas_grid_color,
-                    settings.canvas_grid_thickness, // radius
-                    [
-                        settings.canvas_margin_x,
-                        row as f64 * settings.canvas_dot_height + settings.canvas_margin_y,
-                        settings.canvas_margin_x + canvas_width,
-                        row as f64 * settings.canvas_dot_height + settings.canvas_margin_y,
-                    ],
-                    c.transform,
-                    g,
-                );
-            }
+            // グリッド
+            Grid::draw(&settings, &Sizing::load_canvas(&settings), &c, g);
 
             // TODO 座標を表示したいぜ☆（＾～＾）
             text::Text::new_color([0.0, 0.0, 0.0, 1.0], 32)

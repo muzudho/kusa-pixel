@@ -1,9 +1,33 @@
 use crate::res::image::{Dot, Frame};
 use crate::res::pointing::{Pointing, Sizing};
+use crate::res::settings::Settings;
+use piston_window::*;
+
+pub struct Image {}
+impl Image {
+    /// 各マスに色を打っていくぜ☆（＾～＾）
+    pub fn draw(settings: &Settings, frame: &Frame, c: &Context, g: &mut G2d) {
+        // タテへ
+        for row in 0..settings.height {
+            // ヨコへ
+            for col in 0..settings.width {
+                let dot = frame.get_dot(col, row);
+                let x = col as f64 * settings.canvas_dot_width + settings.canvas_margin_x;
+                let y = row as f64 * settings.canvas_dot_height + settings.canvas_margin_y;
+                rectangle(
+                    dot.rate_array(),
+                    [x, y, settings.canvas_dot_width, settings.canvas_dot_height],
+                    c.transform,
+                    g,
+                );
+            }
+        }
+    }
+}
 
 pub struct Pen {}
 impl Pen {
-    pub fn draw(frame: &mut Frame, pressed_pos: &Pointing, sizing: &Sizing) {
+    pub fn set_dots(frame: &mut Frame, pressed_pos: &Pointing, sizing: &Sizing) {
         if sizing.is_longer_edge_abs() {
             // 横幅の方が長ければ。
             let horizontal = &mut |col| {

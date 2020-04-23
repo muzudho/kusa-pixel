@@ -1,3 +1,4 @@
+pub mod grid;
 pub mod image;
 pub mod logic;
 pub mod pointing;
