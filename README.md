@@ -5,7 +5,6 @@
 
 Visual studio code を使っているとするぜ☆（＾～＾）
 
-```
-cd piston-pixel-art
+```shell
 cargo run
 ```
