@@ -10,16 +10,16 @@ extern crate serde_json;
 extern crate shader_version;
 extern crate vecmath;
 
-mod canvas;
 mod grid;
 mod logic;
 mod paint_tool;
+mod piston_wrapper;
 mod pointing;
 mod settings;
 
-use crate::canvas::Frame;
 use crate::logic::image_operation::*;
 use crate::logic::window_operation::*;
+use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::*;
 use std::path::Path;
 
@@ -27,22 +27,22 @@ fn main() {
     // 設定ファイルを読み込もうぜ☆（＾～＾）
     let mut settings = Settings::load();
 
-    // 画像読込を試みようぜ☆（＾～＾）？
-    let mut frame = match image::open(Path::new(&settings.image_file)) {
+    // Start by loading the image file
+    let mut k_image = match image::open(Path::new(&settings.image_file)) {
         Ok(img) => {
-            // 画像を読み込んで始まりたいぜ☆（＾～＾）
-            let frame = Frame::load_image(&img);
-            settings.image_width = frame.width;
-            settings.image_height = frame.height;
-            frame
+            let k_image = KusaImage::load_image(&img);
+            // Priority is given to the width and height of the image file rather than the configuration file
+            settings.image_width = k_image.width;
+            settings.image_height = k_image.height;
+            k_image
         }
         Err(_e) => {
-            // 画像が読み込めなければ、設定ファイルで指定されたサイズで新規作成☆（＾～＾）
-            let frame = Frame::new(settings.image_width, settings.image_height);
-            write_frame(&frame, &settings.image_file);
-            frame
+            // If there is no image file, create a new one with the size specified in the configuration file
+            let k_image = KusaImage::new(settings.image_width, settings.image_height);
+            write_frame(&k_image, &settings.image_file);
+            k_image
         }
     };
 
-    show_window(settings, &mut frame);
+    show_window(settings, &mut k_image);
 }

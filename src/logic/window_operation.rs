@@ -1,12 +1,12 @@
-use crate::canvas::Frame;
 use crate::grid::Grid;
 use crate::logic::image_operation::*;
 use crate::paint_tool::{Image, Pen};
+use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::pointing::{Pointing, Sizing};
 use crate::settings::Settings;
 use piston_window::*;
 
-pub fn show_window(mut settings: Settings, frame: &mut Frame) {
+pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
     let opengl = OpenGL::V3_2;
     let mut window: PistonWindow = WindowSettings::new("piston: image", [300, 300])
         .exit_on_esc(true)
@@ -57,10 +57,10 @@ pub fn show_window(mut settings: Settings, frame: &mut Frame) {
             let sizing = Sizing::diff(&cursor, &pressed_pos);
 
             // 線を引きます。
-            Pen::set_dots(frame, &pressed_pos, &sizing);
+            Pen::set_dots(k_image, &pressed_pos, &sizing);
 
             println!("Trace   | Click ({}, {}) 保存", &cursor.x, &cursor.y);
-            write_frame(&frame, &settings.image_file);
+            write_frame(&k_image, &settings.image_file);
         }
 
         // draw
@@ -112,7 +112,7 @@ pub fn show_window(mut settings: Settings, frame: &mut Frame) {
             */
 
             // 各マスに色を打っていくぜ☆（＾～＾）
-            Image::draw(&settings, &frame, &c, g);
+            Image::draw(&settings, &k_image, &c, g);
 
             // TODO 今引こうとしている線を、データに描き込まずに画面に表示したいぜ☆（＾～＾）
 

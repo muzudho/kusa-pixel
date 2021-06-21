@@ -1,13 +1,14 @@
 use image::*;
 
-pub struct Frame {
+// This is a wrapped version of Piston's image library
+pub struct KusaImage {
     pub dots: Vec<Dot>,
     pub width: u32,
     pub height: u32,
 }
-impl Frame {
+impl KusaImage {
     pub fn new(width: u32, height: u32) -> Self {
-        Frame {
+        KusaImage {
             dots: vec![Dot::default(); (width * height) as usize],
             width: width,
             height: height,
@@ -19,17 +20,17 @@ impl Frame {
             DynamicImage::ImageRgba8(x) => {
                 let width = x.dimensions().0;
                 let height = x.dimensions().1;
-                let mut frame = Frame::new(width, height);
+                let mut k_image = KusaImage::new(width, height);
                 let mut i = 0;
                 for p in x.pixels() {
                     let col = i % width;
                     let row = i / width;
-                    frame.set_dot(col, row, &Dot::new(p[0], p[1], p[2], p[3]));
+                    k_image.set_dot(col, row, &Dot::new(p[0], p[1], p[2], p[3]));
                     i += 1;
                 }
-                frame
+                k_image
             }
-            _ => Frame::new(1, 1),
+            _ => KusaImage::new(1, 1),
         }
     }
 
@@ -56,11 +57,11 @@ impl Frame {
             "Trace   | set_dot {} {} {} {}",
             col, row, self.width, self.height
         );
-        self.dots[Frame::to_index(col, row, self.width, self.height)] = dot.clone();
+        self.dots[KusaImage::to_index(col, row, self.width, self.height)] = dot.clone();
     }
 
     pub fn get_dot(&self, col: u32, row: u32) -> &Dot {
-        &self.dots[Frame::to_index(col, row, self.width, self.height)]
+        &self.dots[KusaImage::to_index(col, row, self.width, self.height)]
     }
 }
 

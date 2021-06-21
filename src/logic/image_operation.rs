@@ -1,14 +1,14 @@
-use crate::canvas::Frame;
+use crate::piston_wrapper::kusa_image::KusaImage;
 use image::{save_buffer, ColorType};
 // use piston_window::{Flip, G2dTexture, PistonWindow, Texture, TextureSettings};
 use std::path::Path;
 
-pub fn write_frame(frame: &Frame, path: &str) {
+pub fn write_frame(k_image: &KusaImage, path: &str) {
     save_buffer(
         &Path::new(path),
-        &frame.to_vec(),
-        frame.width,
-        frame.height,
+        &k_image.to_vec(),
+        k_image.width,
+        k_image.height,
         ColorType::Rgba8,
     )
     .unwrap();
