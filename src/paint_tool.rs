@@ -5,8 +5,8 @@ use piston_window::*;
 
 // 画像上の座標
 pub fn coord_on_image(x: f64, y: f64, settings: &Settings) -> Option<(i32, i32)> {
-    let xx = (x - settings.canvas_margin_x) / settings.canvas_dot_width;
-    let yy = (y - settings.canvas_margin_y) / settings.canvas_dot_height;
+    let xx = (x - settings.canvas_margin_left) / settings.canvas_dot_width;
+    let yy = (y - settings.canvas_margin_top) / settings.canvas_dot_height;
 
     if 0.0 <= xx
         && xx < settings.image_width as f64
@@ -28,8 +28,8 @@ impl PaintOperation {
             // ヨコへ
             for col in 0..settings.image_width {
                 let k_color = k_image.get_pixel(col, row);
-                let x = col as f64 * settings.canvas_dot_width + settings.canvas_margin_x;
-                let y = row as f64 * settings.canvas_dot_height + settings.canvas_margin_y;
+                let x = col as f64 * settings.canvas_dot_width + settings.canvas_margin_left;
+                let y = row as f64 * settings.canvas_dot_height + settings.canvas_margin_top;
                 rectangle(
                     k_color.to_rgba_rate_array(),
                     [x, y, settings.canvas_dot_width, settings.canvas_dot_height],

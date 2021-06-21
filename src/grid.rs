@@ -11,10 +11,10 @@ impl Grid {
                 settings.canvas_grid_color,
                 settings.canvas_grid_thickness, // radius
                 [
-                    col as f64 * settings.canvas_dot_width + settings.canvas_margin_x,
-                    settings.canvas_margin_y,
-                    col as f64 * settings.canvas_dot_width + settings.canvas_margin_x,
-                    settings.canvas_margin_y + canvas_size.height,
+                    col as f64 * settings.canvas_dot_width + settings.canvas_margin_left,
+                    settings.canvas_margin_top,
+                    col as f64 * settings.canvas_dot_width + settings.canvas_margin_left,
+                    settings.canvas_margin_top + canvas_size.height,
                 ],
                 c.transform,
                 g,
@@ -27,10 +27,10 @@ impl Grid {
                 settings.canvas_grid_color,
                 settings.canvas_grid_thickness, // radius
                 [
-                    settings.canvas_margin_x,
-                    row as f64 * settings.canvas_dot_height + settings.canvas_margin_y,
-                    settings.canvas_margin_x + canvas_size.width,
-                    row as f64 * settings.canvas_dot_height + settings.canvas_margin_y,
+                    settings.canvas_margin_left,
+                    row as f64 * settings.canvas_dot_height + settings.canvas_margin_top,
+                    settings.canvas_margin_left + canvas_size.width,
+                    row as f64 * settings.canvas_dot_height + settings.canvas_margin_top,
                 ],
                 c.transform,
                 g,

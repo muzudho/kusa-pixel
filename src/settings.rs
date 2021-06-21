@@ -16,9 +16,11 @@ pub struct Settings {
     pub image_height: u32,
     // 拡大率
     pub canvas_zoom: f64,
-    // クライアント領域の左上からのオフセット
-    pub canvas_margin_x: f64,
-    pub canvas_margin_y: f64,
+    // クライアント領域の枠からのオフセット
+    pub canvas_margin_top: f64,
+    pub canvas_margin_right: f64,
+    pub canvas_margin_bottom: f64,
+    pub canvas_margin_left: f64,
     // セルの横幅
     pub canvas_dot_width: f64,
     // セルの縦幅

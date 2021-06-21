@@ -8,7 +8,14 @@ use piston_window::*;
 
 pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
     let opengl = OpenGL::V3_2;
-    let mut window: PistonWindow = WindowSettings::new("piston: image", [300, 300])
+
+    let width = settings.canvas_margin_left
+        + settings.image_width as f64 * settings.canvas_dot_width
+        + settings.canvas_margin_right;
+    let height = settings.canvas_margin_top
+        + settings.image_height as f64 * settings.canvas_dot_height
+        + settings.canvas_margin_bottom;
+    let mut window: PistonWindow = WindowSettings::new("piston: image", [width, height])
         .exit_on_esc(true)
         .graphics_api(opengl)
         .build()
@@ -161,7 +168,7 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
             // TODO 座標を表示したいぜ☆（＾～＾）
             text::Text::new_color([0.0, 0.0, 0.0, 1.0], 32)
                 .draw(
-                    &format!("cell({}, {})", k_mouse_cursor.x, k_mouse_cursor.y),
+                    &format!("cell({:.0}, {:.0})", k_mouse_cursor.x, k_mouse_cursor.y),
                     &mut glyphs,
                     &c.draw_state,
                     c.transform.trans(10.0, 30.0), // y位置を揃えるのはむずかしいぜ☆（＾～＾）

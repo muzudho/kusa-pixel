@@ -38,12 +38,14 @@ settings.json:
 
 ```json
 {
-    "canvas_margin_x": 20.0,
-    "canvas_margin_y": 10.0
+    "canvas_margin_top": 10.0,
+    "canvas_margin_right": 20.0,
+    "canvas_margin_bottom": 10.0,
+    "canvas_margin_left": 20.0
 }
 ```
 
-👆 Leave a gap of a few pixels between the left (top) border and the image  
+👆 Leave a gap of a few pixels between the border and the image  
 
 ```json
 {
