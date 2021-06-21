@@ -36,8 +36,8 @@ pub fn show_window(mut settings: Settings, frame: &mut Frame) {
             // 設定ファイルを監視するぜ☆（＾～＾）
             settings = Settings::load();
             println!(
-                "Trace   | Load settings☆（＾～＾） tool=|{}|",
-                settings.tool
+                "Trace   | Load settings☆（＾～＾） paint_tool=|{}|",
+                settings.paint_tool
             );
         }
         count += 1;

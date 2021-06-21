@@ -27,7 +27,7 @@ pub struct Settings {
     // グリッドの色
     pub canvas_grid_color: [f32; 4],
     // 描画ツールの種類
-    pub tool: String,
+    pub paint_tool: String,
 }
 impl Settings {
     /// 設定ファイル読込。
