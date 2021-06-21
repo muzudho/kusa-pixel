@@ -1,4 +1,4 @@
-use crate::data::pointing::{Pointing, Sizing};
+use crate::data::pointing::{coord_on_image, Pointing, Sizing};
 use crate::piston_wrapper::kusa_image::{Dot, KusaImage};
 use crate::settings::Settings;
 use piston_window::*;
@@ -6,7 +6,7 @@ use piston_window::*;
 pub struct PaintOperation {}
 impl PaintOperation {
     /// 各マスに色を打っていくぜ☆（＾～＾）
-    pub fn draw(settings: &Settings, k_image: &KusaImage, c: &Context, g: &mut G2d) {
+    pub fn draw_image(settings: &Settings, k_image: &KusaImage, c: &Context, g: &mut G2d) {
         // タテへ
         for row in 0..settings.image_height {
             // ヨコへ
@@ -28,36 +28,41 @@ impl PaintOperation {
 pub struct Pen {}
 impl Pen {
     // 点を置くぜ（＾～＾）
-    pub fn put_dot(k_image: &mut KusaImage, coord: &Pointing) {
+    pub fn put_dot(k_image: &mut KusaImage, pointing: &Pointing, settings: &Settings) {
         // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
-        k_image.set_dot(
-            coord.col as u32,
-            coord.row as u32,
-            &Dot::new(255, 0, 0, 255),
-        );
+        if let Some(coord) = coord_on_image(pointing.x, pointing.y, settings) {
+            k_image.set_dot(coord.0 as u32, coord.1 as u32, &Dot::new(255, 0, 0, 255));
+        }
     }
 
     // 線を引くぜ（＾～＾）
-    pub fn draw_line(k_image: &mut KusaImage, pressed_pos: &Pointing, sizing: &Sizing) {
+    pub fn draw_line(
+        k_image: &mut KusaImage,
+        pressed_pos: &Pointing,
+        sizing: &Sizing,
+        settings: &Settings,
+    ) {
         if sizing.is_longer_edge_abs() {
             // 横幅の方が長ければ。
             let horizontal = &mut |col| {
                 let row = sizing.get_a() * col;
                 // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
-                k_image.set_dot(
-                    (pressed_pos.col + col as i32) as u32,
-                    (pressed_pos.row + row as i32) as u32,
-                    &Dot::new(255, 0, 0, 255),
-                );
+                if let Some(coord) = coord_on_image(pressed_pos.x, pressed_pos.y, settings) {
+                    k_image.set_dot(
+                        (coord.0 + col as i32) as u32,
+                        (coord.1 + row as i32) as u32,
+                        &Dot::new(255, 0, 0, 255),
+                    );
+                }
             };
             if 0.0 <= sizing.long_edge_sign() {
                 //println!("Trace   | 左へ☆（＾～＾）");
-                for col in 1..(sizing.long_edge_cells_abs() + 1) {
+                for col in 1..(sizing.long_edge_cells_abs(settings) + 1) {
                     horizontal(col as f64);
                 }
             } else {
                 //println!("Trace   | 右へ☆（＾～＾）");
-                for col in (1..(sizing.long_edge_cells_abs() + 1)).rev() {
+                for col in (1..(sizing.long_edge_cells_abs(settings) + 1)).rev() {
                     horizontal(sizing.long_edge_sign() * (col as f64));
                 }
             }
@@ -67,20 +72,22 @@ impl Pen {
                 let col = sizing.get_a() * row;
                 //println!("Trace   | col {} = {} * {}", col, sizing.get_a(), row);
                 // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
-                k_image.set_dot(
-                    (pressed_pos.col + col as i32) as u32,
-                    (pressed_pos.row + row as i32) as u32,
-                    &Dot::new(255, 0, 0, 255),
-                );
+                if let Some(coord) = coord_on_image(pressed_pos.x, pressed_pos.y, settings) {
+                    k_image.set_dot(
+                        (coord.0 + col as i32) as u32,
+                        (coord.1 + row as i32) as u32,
+                        &Dot::new(255, 0, 0, 255),
+                    );
+                }
             };
             if 0.0 <= sizing.long_edge_sign() {
                 //println!("Trace   | 下へ☆（＾～＾）");
-                for row in 1..(sizing.long_edge_cells_abs() + 1) {
+                for row in 1..(sizing.long_edge_cells_abs(settings) + 1) {
                     vertical(row as f64);
                 }
             } else {
                 //println!("Trace   | 上へ☆（＾～＾）");
-                for row in (1..(sizing.long_edge_cells_abs() + 1)).rev() {
+                for row in (1..(sizing.long_edge_cells_abs(settings) + 1)).rev() {
                     vertical(sizing.long_edge_sign() * (row as f64));
                 }
             }

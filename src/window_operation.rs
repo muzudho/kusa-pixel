@@ -16,6 +16,7 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
 
     // let texture = create_texture(&settings.image_file, &mut window);
     let mut k_mouse_cursor = Pointing::default();
+    let mut is_mouse_pressed = false;
     let mut pressed_pos = k_mouse_cursor;
 
     let assets = find_folder::Search::ParentsThenKids(3, 3)
@@ -45,36 +46,49 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
         }
         // マウスカーソルの座標を補足するぜ☆（＾～＾）
         e.mouse_cursor(|pos| {
-            k_mouse_cursor = Pointing::from_pos(pos, &settings);
+            k_mouse_cursor = Pointing::from_pos(pos);
         });
 
         // 📖 [Event](http://docs.piston.rs/piston_window/piston_window/enum.Event.html)
         // ⚡Mouse button pressed
         // 📖 [PressEvent](https://docs.piston.rs/piston_window/piston_window/trait.PressEvent.html)
         if let Some(_button) = e.press_args() {
+            is_mouse_pressed = true;
             pressed_pos = k_mouse_cursor.clone();
             //println!("Trace   | ボタンが押されたぜ☆（＾～＾） {:?}", pressed_pos);
 
             // 点を置きます
-            Pen::put_dot(k_image, &pressed_pos);
+            Pen::put_dot(k_image, &pressed_pos, &settings);
+
+            // 保存
+            write_k_image(&k_image, &settings.image_file);
         }
 
         // TODO ⚡Mouse move
         // 📖 [MouseRelativeEvent](https://docs.piston.rs/piston_window/piston_window/trait.MouseRelativeEvent.html)
-        if let Some(_coord) = e.mouse_relative_args() {
-            //let dx = coord[0];
-            //let dy = coord[1];
-            //println!("Trace   | マウス移動中☆（＾～＾） ({:?}, {:?})", dx, dy);
-
-            // 点を置きます
-            Pen::put_dot(k_image, &pressed_pos);
+        if let Some(coord) = e.mouse_relative_args() {
+            if is_mouse_pressed {
+                let dx = coord[0];
+                let dy = coord[1];
+                pressed_pos.x += dx;
+                pressed_pos.y += dy;
+                println!(
+                    "Trace   | マウス移動中☆（＾～＾） ({:?}, {:?}) ({:?}, {:?})",
+                    dx, dy, pressed_pos.x, pressed_pos.y
+                );
+                // 点を置きます
+                Pen::put_dot(k_image, &pressed_pos, &settings);
+                // 保存
+                write_k_image(&k_image, &settings.image_file);
+            }
         }
 
-        /*
         // ⚡Mouse button released
         // 📖 [ReleaseEvent](https://docs.piston.rs/piston_window/piston_window/trait.ReleaseEvent.html)
         if let Some(_button) = e.release_args() {
             //println!("Trace   | ボタンを離したぜ☆（＾～＾）");
+            is_mouse_pressed = false;
+            /*
             let sizing = Sizing::diff(&k_mouse_cursor, &pressed_pos);
 
             // 線を引きます。
@@ -85,8 +99,8 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
             //    &k_mouse_cursor.x, &k_mouse_cursor.y
             //);
             write_k_image(&k_image, &settings.image_file);
+            */
         }
-        */
 
         // ⚡Window paint
         window.draw_2d(&e, |c, g, device| {
@@ -137,7 +151,7 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
             */
 
             // 各マスに色を打っていくぜ☆（＾～＾）
-            PaintOperation::draw(&settings, &k_image, &c, g);
+            PaintOperation::draw_image(&settings, &k_image, &c, g);
 
             // TODO 今引こうとしている線を、データに描き込まずに画面に表示したいぜ☆（＾～＾）
 
