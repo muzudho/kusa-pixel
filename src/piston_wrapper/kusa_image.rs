@@ -1,4 +1,8 @@
 use image::*;
+use std::path::Path;
+//use crate::piston_wrapper::kusa_image::KusaImage;
+//use image::{save_buffer, ColorType};
+// use piston_window::{Flip, G2dTexture, PistonWindow, Texture, TextureSettings};
 
 // This is a wrapped version of Piston's image library
 pub struct KusaImage {
@@ -64,6 +68,33 @@ impl KusaImage {
         &self.dots[KusaImage::to_index(col, row, self.width, self.height)]
     }
 }
+
+pub fn write_k_image(k_image: &KusaImage, path: &str) {
+    save_buffer(
+        &Path::new(path),
+        &k_image.to_vec(),
+        k_image.width,
+        k_image.height,
+        ColorType::Rgba8,
+    )
+    .unwrap();
+}
+
+/*
+pub fn create_texture(png_path: &str, window: &mut PistonWindow) -> G2dTexture {
+    let assets = find_folder::Search::ParentsThenKids(3, 3)
+        .for_folder("assets")
+        .unwrap();
+
+    Texture::from_path(
+        &mut window.create_texture_context(),
+        &assets.join(png_path),
+        Flip::None,
+        &TextureSettings::new(),
+    )
+    .unwrap()
+}
+*/
 
 #[derive(Clone)]
 pub struct Dot {

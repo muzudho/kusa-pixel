@@ -17,8 +17,8 @@ mod piston_wrapper;
 mod pointing;
 mod settings;
 
-use crate::logic::image_operation::*;
 use crate::logic::window_operation::*;
+use crate::piston_wrapper::kusa_image::write_k_image;
 use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::*;
 use std::path::Path;
@@ -39,7 +39,7 @@ fn main() {
         Err(_e) => {
             // If there is no image file, create a new one with the size specified in the configuration file
             let k_image = KusaImage::new(settings.image_width, settings.image_height);
-            write_frame(&k_image, &settings.image_file);
+            write_k_image(&k_image, &settings.image_file);
             k_image
         }
     };

@@ -1,6 +1,6 @@
 use crate::grid::Grid;
-use crate::logic::image_operation::*;
 use crate::paint_tool::{PaintOperation, Pen};
+use crate::piston_wrapper::kusa_image::write_k_image;
 use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::pointing::{Pointing, Sizing};
 use crate::settings::Settings;
@@ -60,7 +60,7 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
             Pen::set_dots(k_image, &pressed_pos, &sizing);
 
             println!("Trace   | Click ({}, {}) 保存", &cursor.x, &cursor.y);
-            write_frame(&k_image, &settings.image_file);
+            write_k_image(&k_image, &settings.image_file);
         }
 
         // draw
