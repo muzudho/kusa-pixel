@@ -11,16 +11,16 @@ extern crate shader_version;
 extern crate vecmath;
 
 mod grid;
-mod logic;
 mod paint_tool;
 mod piston_wrapper;
 mod pointing;
 mod settings;
+mod window_operation;
 
-use crate::logic::window_operation::*;
 use crate::piston_wrapper::kusa_image::write_k_image;
 use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::*;
+use crate::window_operation::*;
 use std::path::Path;
 
 fn main() {
