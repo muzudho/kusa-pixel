@@ -1,3 +1,4 @@
+use crate::data::kusa_argb::KusaColor;
 use image::*;
 use std::path::Path;
 //use crate::piston_wrapper::kusa_image::KusaImage;
@@ -6,14 +7,14 @@ use std::path::Path;
 
 // This is a wrapped version of Piston's image library
 pub struct KusaImage {
-    pub dots: Vec<Dot>,
+    pub k_colors: Vec<KusaColor>,
     pub width: u32,
     pub height: u32,
 }
 impl KusaImage {
     pub fn new(width: u32, height: u32) -> Self {
         KusaImage {
-            dots: vec![Dot::default(); (width * height) as usize],
+            k_colors: vec![KusaColor::default(); (width * height) as usize],
             width: width,
             height: height,
         }
@@ -29,7 +30,16 @@ impl KusaImage {
                 for p in x.pixels() {
                     let col = i % width;
                     let row = i / width;
-                    k_image.set_dot(col, row, &Dot::new(p[0], p[1], p[2], p[3]));
+                    k_image.set_pixel(
+                        col,
+                        row,
+                        &KusaColor {
+                            r: p[0],
+                            g: p[1],
+                            b: p[2],
+                            a: p[3],
+                        },
+                    );
                     i += 1;
                 }
                 k_image
@@ -38,10 +48,10 @@ impl KusaImage {
         }
     }
 
-    pub fn to_vec(&self) -> Vec<u8> {
+    pub fn to_rgba_vec(&self) -> Vec<u8> {
         let mut vec: Vec<u8> = Vec::new();
-        for dot in &self.dots {
-            vec.extend_from_slice(&dot.array());
+        for k_color in &self.k_colors {
+            vec.extend_from_slice(&k_color.to_rgba_array());
         }
         vec
     }
@@ -56,23 +66,23 @@ impl KusaImage {
         (row * width + col) as usize
     }
 
-    pub fn set_dot(&mut self, col: u32, row: u32, dot: &Dot) {
+    pub fn set_pixel(&mut self, col: u32, row: u32, k_color: &KusaColor) {
         //println!(
-        //    "Trace   | set_dot {} {} {} {}",
+        //    "Trace   | set_pixel {} {} {} {}",
         //    col, row, self.width, self.height
         //);
-        self.dots[KusaImage::to_index(col, row, self.width, self.height)] = dot.clone();
+        self.k_colors[KusaImage::to_index(col, row, self.width, self.height)] = k_color.clone();
     }
 
-    pub fn get_dot(&self, col: u32, row: u32) -> &Dot {
-        &self.dots[KusaImage::to_index(col, row, self.width, self.height)]
+    pub fn get_pixel(&self, col: u32, row: u32) -> &KusaColor {
+        &self.k_colors[KusaImage::to_index(col, row, self.width, self.height)]
     }
 }
 
 pub fn write_k_image(k_image: &KusaImage, path: &str) {
     save_buffer(
         &Path::new(path),
-        &k_image.to_vec(),
+        &k_image.to_rgba_vec(),
         k_image.width,
         k_image.height,
         ColorType::Rgba8,
@@ -95,44 +105,3 @@ pub fn create_texture(png_path: &str, window: &mut PistonWindow) -> G2dTexture {
     .unwrap()
 }
 */
-
-#[derive(Clone)]
-pub struct Dot {
-    pub r: u8,
-    pub g: u8,
-    pub b: u8,
-    pub a: u8,
-}
-impl Dot {
-    pub fn new(r: u8, g: u8, b: u8, a: u8) -> Self {
-        Dot {
-            r: r,
-            g: g,
-            b: b,
-            a: a,
-        }
-    }
-
-    pub fn array(&self) -> [u8; 4] {
-        [self.r, self.g, self.b, self.a]
-    }
-
-    pub fn rate_array(&self) -> [f32; 4] {
-        [
-            self.r as f32 / 255f32,
-            self.g as f32 / 255f32,
-            self.b as f32 / 255f32,
-            self.a as f32 / 255f32,
-        ]
-    }
-}
-impl Default for Dot {
-    fn default() -> Self {
-        Dot {
-            r: 0,
-            g: 128,
-            b: 128,
-            a: 255,
-        }
-    }
-}

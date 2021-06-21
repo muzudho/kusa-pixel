@@ -1,5 +1,6 @@
+use crate::data::kusa_argb::KusaColor;
 use crate::data::pointing::Pointing;
-use crate::piston_wrapper::kusa_image::{Dot, KusaImage};
+use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::Settings;
 use piston_window::*;
 
@@ -27,11 +28,11 @@ impl PaintOperation {
         for row in 0..settings.image_height {
             // ヨコへ
             for col in 0..settings.image_width {
-                let dot = k_image.get_dot(col, row);
+                let k_color = k_image.get_pixel(col, row);
                 let x = col as f64 * settings.canvas_dot_width + settings.canvas_margin_x;
                 let y = row as f64 * settings.canvas_dot_height + settings.canvas_margin_y;
                 rectangle(
-                    dot.rate_array(),
+                    k_color.to_rgba_rate_array(),
                     [x, y, settings.canvas_dot_width, settings.canvas_dot_height],
                     c.transform,
                     g,
@@ -47,7 +48,16 @@ impl Pen {
     pub fn put_dot(k_image: &mut KusaImage, pointing: &Pointing, settings: &Settings) {
         // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
         if let Some(coord) = coord_on_image(pointing.x, pointing.y, settings) {
-            k_image.set_dot(coord.0 as u32, coord.1 as u32, &Dot::new(255, 0, 0, 255));
+            k_image.set_pixel(
+                coord.0 as u32,
+                coord.1 as u32,
+                &KusaColor {
+                    r: 255,
+                    g: 0,
+                    b: 0,
+                    a: 255,
+                },
+            );
         }
     }
 
@@ -68,7 +78,7 @@ impl Pen {
                     k_image.set_dot(
                         (coord.0 + col as i32) as u32,
                         (coord.1 + row as i32) as u32,
-                        &Dot::new(255, 0, 0, 255),
+                        &KusaColor::new(255, 0, 0, 255),
                     );
                 }
             };
@@ -93,7 +103,7 @@ impl Pen {
                     k_image.set_dot(
                         (coord.0 + col as i32) as u32,
                         (coord.1 + row as i32) as u32,
-                        &Dot::new(255, 0, 0, 255),
+                        &KusaColor::new(255, 0, 0, 255),
                     );
                 }
             };
