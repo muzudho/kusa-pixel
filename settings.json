@@ -1,5 +1,5 @@
 {
-    "file": "output/test_test.png",
+    "image_file": "./work/image.png",
     "width": 64,
     "height": 96,
     "zoom": 1.0,

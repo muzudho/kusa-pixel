@@ -14,7 +14,7 @@ pub fn show_window(mut settings: Settings, frame: &mut Frame) {
         .build()
         .unwrap();
 
-    // let texture = create_texture(&settings.file, &mut window);
+    // let texture = create_texture(&settings.image_file, &mut window);
     let mut cursor = Pointing::default();
     let mut pressed_pos = cursor;
 
@@ -60,7 +60,7 @@ pub fn show_window(mut settings: Settings, frame: &mut Frame) {
             Pen::set_dots(frame, &pressed_pos, &sizing);
 
             println!("Trace   | Click ({}, {}) 保存", &cursor.x, &cursor.y);
-            write_frame(&frame, &settings.file);
+            write_frame(&frame, &settings.image_file);
         }
 
         // draw

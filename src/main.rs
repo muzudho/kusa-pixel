@@ -23,7 +23,7 @@ fn main() {
     let mut settings = Settings::load();
 
     // 画像読込を試みようぜ☆（＾～＾）？
-    let mut frame = match image::open(Path::new("assets").join(&settings.file)) {
+    let mut frame = match image::open(Path::new(&settings.image_file)) {
         Ok(img) => {
             // 画像を読み込んで始まりたいぜ☆（＾～＾）
             let frame = Frame::load_image(&img);
@@ -34,7 +34,7 @@ fn main() {
         Err(_e) => {
             // 画像が読み込めなければ、設定ファイルで指定されたサイズで新規作成☆（＾～＾）
             let frame = Frame::new(settings.width, settings.height);
-            write_frame(&frame, &settings.file);
+            write_frame(&frame, &settings.image_file);
             frame
         }
     };

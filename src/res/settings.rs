@@ -8,7 +8,7 @@ use std::path::Path;
 #[serde(rename_all = "snake_case")] // プロパティ名が JSON 側でスネークケースであることを指定
 pub struct Settings {
     // 画像ファイルパス。assetsディレクトリーの下から
-    pub file: String,
+    pub image_file: String,
     // 画像ファイルの横幅
     pub width: u32,
     // 画像ファイルの縦幅
@@ -32,7 +32,7 @@ pub struct Settings {
 impl Settings {
     /// 設定ファイル読込。
     pub fn load() -> Self {
-        let path = Path::new("./input/settings.json");
+        let path = Path::new("./settings.json");
 
         let mut file = match File::open(path) {
             Ok(x) => x,

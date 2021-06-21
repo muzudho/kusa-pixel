@@ -22,3 +22,17 @@ Visual studio code を使っているとするぜ☆（＾～＾）
 ```shell
 cargo run
 ```
+
+## Concept
+
+GUI作るのめんどくさいんで、ペンの太さとか色は `settings.json` に入っているぜ（＾～＾）  
+
+settings.json:  
+
+```json
+{
+    "image_file": "./work/image.png"
+}
+```
+
+👆 画像ファイルのパスを指定しろだぜ（＾～＾）  

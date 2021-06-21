@@ -5,7 +5,7 @@ use std::path::Path;
 
 pub fn write_frame(frame: &Frame, path: &str) {
     save_buffer(
-        &Path::new("assets").join(path),
+        &Path::new(path),
         &frame.to_vec(),
         frame.width,
         frame.height,
