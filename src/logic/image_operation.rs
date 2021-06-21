@@ -1,4 +1,4 @@
-use crate::res::image::Frame;
+use crate::canvas::Frame;
 use image::{save_buffer, ColorType};
 // use piston_window::{Flip, G2dTexture, PistonWindow, Texture, TextureSettings};
 use std::path::Path;

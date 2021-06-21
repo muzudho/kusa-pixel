@@ -1,9 +1,9 @@
-use crate::res::grid::Grid;
-use crate::res::image::Frame;
-use crate::res::logic::image_operation::*;
-use crate::res::pointing::{Pointing, Sizing};
-use crate::res::settings::Settings;
-use crate::res::tool::{Image, Pen};
+use crate::canvas::Frame;
+use crate::grid::Grid;
+use crate::logic::image_operation::*;
+use crate::paint_tool::{Image, Pen};
+use crate::pointing::{Pointing, Sizing};
+use crate::settings::Settings;
 use piston_window::*;
 
 pub fn show_window(mut settings: Settings, frame: &mut Frame) {

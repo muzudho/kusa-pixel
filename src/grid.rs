@@ -1,5 +1,5 @@
-use crate::res::pointing::Sizing;
-use crate::res::settings::Settings;
+use crate::pointing::Sizing;
+use crate::settings::Settings;
 use piston_window::*;
 
 pub struct Grid {}

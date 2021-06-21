@@ -1,4 +1,4 @@
-use crate::res::settings::Settings;
+use crate::settings::Settings;
 use std::fmt;
 
 #[derive(Clone, Copy)]

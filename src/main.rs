@@ -10,12 +10,17 @@ extern crate serde_json;
 extern crate shader_version;
 extern crate vecmath;
 
-mod res;
+mod canvas;
+mod grid;
+mod logic;
+mod paint_tool;
+mod pointing;
+mod settings;
 
-use crate::res::image::Frame;
-use crate::res::logic::image_operation::*;
-use crate::res::logic::window_operation::*;
-use crate::res::settings::Settings;
+use crate::canvas::Frame;
+use crate::logic::image_operation::*;
+use crate::logic::window_operation::*;
+use crate::settings::*;
 use std::path::Path;
 
 fn main() {

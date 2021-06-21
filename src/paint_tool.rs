@@ -1,6 +1,6 @@
-use crate::res::image::{Dot, Frame};
-use crate::res::pointing::{Pointing, Sizing};
-use crate::res::settings::Settings;
+use crate::canvas::{Dot, Frame};
+use crate::pointing::{Pointing, Sizing};
+use crate::settings::Settings;
 use piston_window::*;
 
 pub struct Image {}
