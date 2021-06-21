@@ -27,7 +27,7 @@ impl PaintOperation {
 
 pub struct Pen {}
 impl Pen {
-    pub fn set_dots(k_image: &mut KusaImage, pressed_pos: &Pointing, sizing: &Sizing) {
+    pub fn draw_line(k_image: &mut KusaImage, pressed_pos: &Pointing, sizing: &Sizing) {
         if sizing.is_longer_edge_abs() {
             // 横幅の方が長ければ。
             let horizontal = &mut |col| {
