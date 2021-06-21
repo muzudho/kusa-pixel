@@ -51,12 +51,12 @@ impl Pen {
                 );
             };
             if 0.0 <= sizing.long_edge_sign() {
-                println!("Trace   | 左へ☆（＾～＾）");
+                //println!("Trace   | 左へ☆（＾～＾）");
                 for col in 1..(sizing.long_edge_cells_abs() + 1) {
                     horizontal(col as f64);
                 }
             } else {
-                println!("Trace   | 右へ☆（＾～＾）");
+                //println!("Trace   | 右へ☆（＾～＾）");
                 for col in (1..(sizing.long_edge_cells_abs() + 1)).rev() {
                     horizontal(sizing.long_edge_sign() * (col as f64));
                 }
@@ -65,7 +65,7 @@ impl Pen {
             // 縦幅の方が長いか同じなら。
             let vertical = &mut |row| {
                 let col = sizing.get_a() * row;
-                println!("Trace   | col {} = {} * {}", col, sizing.get_a(), row);
+                //println!("Trace   | col {} = {} * {}", col, sizing.get_a(), row);
                 // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
                 k_image.set_dot(
                     (pressed_pos.col + col as i32) as u32,
@@ -74,12 +74,12 @@ impl Pen {
                 );
             };
             if 0.0 <= sizing.long_edge_sign() {
-                println!("Trace   | 下へ☆（＾～＾）");
+                //println!("Trace   | 下へ☆（＾～＾）");
                 for row in 1..(sizing.long_edge_cells_abs() + 1) {
                     vertical(row as f64);
                 }
             } else {
-                println!("Trace   | 上へ☆（＾～＾）");
+                //println!("Trace   | 上へ☆（＾～＾）");
                 for row in (1..(sizing.long_edge_cells_abs() + 1)).rev() {
                     vertical(sizing.long_edge_sign() * (row as f64));
                 }

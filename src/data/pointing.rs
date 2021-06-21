@@ -61,14 +61,14 @@ impl Sizing {
             cols: cursor.col - pressed_pos.col,
             rows: cursor.row - pressed_pos.row,
         };
-        println!(
-            "Trace   | diff cursor={:?} pressed_pos={:?} sizing={:?} long_edge_sign={} long_edge_cell_abs={}",
-            cursor,
-            pressed_pos,
-            sizing,
-            sizing.long_edge_sign(),
-            sizing.long_edge_cells_abs()
-        );
+        //println!(
+        //    "Trace   | diff cursor={:?} pressed_pos={:?} sizing={:?} long_edge_sign={} long_edge_cell_abs={}",
+        //    cursor,
+        //    pressed_pos,
+        //    sizing,
+        //    sizing.long_edge_sign(),
+        //    sizing.long_edge_cells_abs()
+        //);
         sizing
     }
 

@@ -21,7 +21,7 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
     let assets = find_folder::Search::ParentsThenKids(3, 3)
         .for_folder("assets")
         .unwrap();
-    println!("{:?}", assets);
+    //println!("{:?}", assets);
     let mut glyphs = window
         .load_font(assets.join("font/NotoSans-Medium.ttf"))
         .unwrap();
@@ -35,10 +35,10 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
             // イベント・ループの中で　ファイル入出力するのは　クソだが　使い慣れてないんで仕方ないぜ☆（＾～＾）
             // 設定ファイルを監視するぜ☆（＾～＾）
             settings = Settings::load();
-            println!(
-                "Trace   | Load settings☆（＾～＾） paint_tool=|{}|",
-                settings.paint_tool
-            );
+            //println!(
+            //    "Trace   | Load settings☆（＾～＾） paint_tool=|{}|",
+            //    settings.paint_tool
+            //);
             count_to_reload = 0;
         } else {
             count_to_reload += 1;
@@ -53,7 +53,7 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
         // 📖 [PressEvent](https://docs.piston.rs/piston_window/piston_window/trait.PressEvent.html)
         if let Some(_button) = e.press_args() {
             pressed_pos = k_mouse_cursor.clone();
-            println!("Trace   | ボタンが押されたぜ☆（＾～＾） {:?}", pressed_pos);
+            //println!("Trace   | ボタンが押されたぜ☆（＾～＾） {:?}", pressed_pos);
 
             // 点を置きます
             Pen::put_dot(k_image, &pressed_pos);
@@ -61,10 +61,10 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
 
         // TODO ⚡Mouse move
         // 📖 [MouseRelativeEvent](https://docs.piston.rs/piston_window/piston_window/trait.MouseRelativeEvent.html)
-        if let Some(coord) = e.mouse_relative_args() {
-            let dx = coord[0];
-            let dy = coord[1];
-            println!("Trace   | マウス移動中☆（＾～＾） ({:?}, {:?})", dx, dy);
+        if let Some(_coord) = e.mouse_relative_args() {
+            //let dx = coord[0];
+            //let dy = coord[1];
+            //println!("Trace   | マウス移動中☆（＾～＾） ({:?}, {:?})", dx, dy);
 
             // 点を置きます
             Pen::put_dot(k_image, &pressed_pos);
@@ -74,16 +74,16 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
         // ⚡Mouse button released
         // 📖 [ReleaseEvent](https://docs.piston.rs/piston_window/piston_window/trait.ReleaseEvent.html)
         if let Some(_button) = e.release_args() {
-            println!("Trace   | ボタンを離したぜ☆（＾～＾）");
+            //println!("Trace   | ボタンを離したぜ☆（＾～＾）");
             let sizing = Sizing::diff(&k_mouse_cursor, &pressed_pos);
 
             // 線を引きます。
             Pen::draw_line(k_image, &pressed_pos, &sizing);
 
-            println!(
-                "Trace   | Click ({}, {}) 保存",
-                &k_mouse_cursor.x, &k_mouse_cursor.y
-            );
+            //println!(
+            //    "Trace   | Click ({}, {}) 保存",
+            //    &k_mouse_cursor.x, &k_mouse_cursor.y
+            //);
             write_k_image(&k_image, &settings.image_file);
         }
         */
