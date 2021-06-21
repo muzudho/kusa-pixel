@@ -3,8 +3,8 @@ use crate::pointing::{Pointing, Sizing};
 use crate::settings::Settings;
 use piston_window::*;
 
-pub struct Image {}
-impl Image {
+pub struct PaintOperation {}
+impl PaintOperation {
     /// 各マスに色を打っていくぜ☆（＾～＾）
     pub fn draw(settings: &Settings, k_image: &KusaImage, c: &Context, g: &mut G2d) {
         // タテへ

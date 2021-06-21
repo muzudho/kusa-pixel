@@ -1,6 +1,6 @@
 use crate::grid::Grid;
 use crate::logic::image_operation::*;
-use crate::paint_tool::{Image, Pen};
+use crate::paint_tool::{PaintOperation, Pen};
 use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::pointing::{Pointing, Sizing};
 use crate::settings::Settings;
@@ -112,7 +112,7 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
             */
 
             // 各マスに色を打っていくぜ☆（＾～＾）
-            Image::draw(&settings, &k_image, &c, g);
+            PaintOperation::draw(&settings, &k_image, &c, g);
 
             // TODO 今引こうとしている線を、データに描き込まずに画面に表示したいぜ☆（＾～＾）
 
