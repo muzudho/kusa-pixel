@@ -57,10 +57,10 @@ impl KusaImage {
     }
 
     pub fn set_dot(&mut self, col: u32, row: u32, dot: &Dot) {
-        println!(
-            "Trace   | set_dot {} {} {} {}",
-            col, row, self.width, self.height
-        );
+        //println!(
+        //    "Trace   | set_dot {} {} {} {}",
+        //    col, row, self.width, self.height
+        //);
         self.dots[KusaImage::to_index(col, row, self.width, self.height)] = dot.clone();
     }
 

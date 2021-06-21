@@ -27,6 +27,17 @@ impl PaintOperation {
 
 pub struct Pen {}
 impl Pen {
+    // 点を置くぜ（＾～＾）
+    pub fn put_dot(k_image: &mut KusaImage, coord: &Pointing) {
+        // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
+        k_image.set_dot(
+            coord.col as u32,
+            coord.row as u32,
+            &Dot::new(255, 0, 0, 255),
+        );
+    }
+
+    // 線を引くぜ（＾～＾）
     pub fn draw_line(k_image: &mut KusaImage, pressed_pos: &Pointing, sizing: &Sizing) {
         if sizing.is_longer_edge_abs() {
             // 横幅の方が長ければ。
