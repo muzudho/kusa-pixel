@@ -1,7 +1,23 @@
-use crate::data::pointing::{coord_on_image, Pointing, Sizing};
+use crate::data::pointing::{Pointing, Sizing};
 use crate::piston_wrapper::kusa_image::{Dot, KusaImage};
 use crate::settings::Settings;
 use piston_window::*;
+
+// 画像上の座標
+pub fn coord_on_image(x: f64, y: f64, settings: &Settings) -> Option<(i32, i32)> {
+    let xx = (x - settings.canvas_margin_x) / settings.canvas_dot_width;
+    let yy = (y - settings.canvas_margin_y) / settings.canvas_dot_height;
+
+    if 0.0 <= xx
+        && xx < settings.image_width as f64
+        && 0.0 <= yy
+        && yy < settings.image_height as f64
+    {
+        return Some((xx as i32, yy as i32));
+    } else {
+        return None;
+    }
+}
 
 pub struct PaintOperation {}
 impl PaintOperation {
