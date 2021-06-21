@@ -1,5 +1,7 @@
 # Kusa pixel
 
+![20210622blog4.png](./doc/img/20210622blog4.png)  
+
 This is a pixel art painting software.  
 kusa is Japanese internet slang for laughing at
 
