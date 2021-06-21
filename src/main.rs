@@ -1,3 +1,11 @@
+// Publish:
+//
+// (1) Version up on Cargo.toml.
+// (2) `cargo doc --open`
+// (3) Comit to Git-hub.
+// (4) `cargo publish --dry-run`
+// (5) `cargo publish`
+
 extern crate camera_controllers;
 extern crate find_folder;
 extern crate gfx;

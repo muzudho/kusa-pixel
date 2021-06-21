@@ -14,7 +14,7 @@ It uses the libraries of Piston, a game engine in the Rust language.
 
 It is intended to be developed and run using Visual Studio Code on Windows.  
 
-## Features or concepts
+## Concepts
 
 * It is a pain in the ass to create a GUI,  
 so please edit the configuration file for pen thickness and other settings.
@@ -36,6 +36,12 @@ cargo build
 ```shell
 cargo run
 ```
+
+## Features
+
+![20210622blog5a1.png](./doc/img/20210622blog5a1.png)  
+
+👆 Drag the mouse from where you clicked to where you passed  
 
 ## Documents
 
