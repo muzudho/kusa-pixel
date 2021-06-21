@@ -1,5 +1,7 @@
-# piston-pixel-art-drawing-tool
+# Kusa pixel
+
 まだだぜ☆（＾～＾） ドット絵エディターを作ろうというところだぜ☆（＾～＾）
+名前が長いので　短くした（＾～＾）草（＾～＾）
 
 ## Build
 
