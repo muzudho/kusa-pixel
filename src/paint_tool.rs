@@ -1,4 +1,4 @@
-use crate::data::pointing::{Pointing, Sizing};
+use crate::data::pointing::Pointing;
 use crate::piston_wrapper::kusa_image::{Dot, KusaImage};
 use crate::settings::Settings;
 use piston_window::*;
@@ -51,6 +51,7 @@ impl Pen {
         }
     }
 
+    /*
     // 線を引くぜ（＾～＾）
     pub fn draw_line(
         k_image: &mut KusaImage,
@@ -109,4 +110,5 @@ impl Pen {
             }
         }
     }
+    */
 }

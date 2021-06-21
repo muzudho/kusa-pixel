@@ -38,6 +38,8 @@ impl Sizing {
             height: settings.image_height as f64 * settings.canvas_dot_height,
         }
     }
+
+    /*
     pub fn diff(cursor: &Pointing, pressed_pos: &Pointing, settings: &Settings) -> Self {
         let sizing = Sizing {
             width: cursor.x - pressed_pos.x,
@@ -66,16 +68,6 @@ impl Sizing {
         }
     }
 
-    /*
-    pub fn long_edge_pixels_abs(&self) -> usize {
-        if self.is_longer_width_abs() {
-            self.width.abs() as usize
-        } else {
-            self.height.abs() as usize
-        }
-    }
-    */
-
     pub fn long_edge_cells_abs(&self, settings: &Settings) -> usize {
         if self.is_longer_edge_abs() {
             (self.width / settings.canvas_dot_width) as usize
@@ -92,6 +84,17 @@ impl Sizing {
             self.height / self.height.abs()
         }
     }
+    */
+
+    /*
+    pub fn long_edge_pixels_abs(&self) -> usize {
+        if self.is_longer_width_abs() {
+            self.width.abs() as usize
+        } else {
+            self.height.abs() as usize
+        }
+    }
+    */
 }
 impl fmt::Debug for Sizing {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
