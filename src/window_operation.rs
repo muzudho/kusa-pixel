@@ -72,10 +72,10 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
                 let dy = coord[1];
                 pressed_pos.x += dx;
                 pressed_pos.y += dy;
-                println!(
-                    "Trace   | マウス移動中☆（＾～＾） ({:?}, {:?}) ({:?}, {:?})",
-                    dx, dy, pressed_pos.x, pressed_pos.y
-                );
+                //println!(
+                //    "Trace   | マウス移動中☆（＾～＾） ({:?}, {:?}) ({:?}, {:?})",
+                //    dx, dy, pressed_pos.x, pressed_pos.y
+                //);
                 // 点を置きます
                 Pen::put_dot(k_image, &pressed_pos, &settings);
                 // 保存

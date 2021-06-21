@@ -1,5 +1,8 @@
+use serde::Deserialize;
+
 /// In the Piston library, the order is R, G, B, A.
-#[derive(Clone)]
+#[derive(Clone, Deserialize)]
+#[serde(rename_all = "snake_case")] // プロパティ名が JSON 側でスネークケースであることを指定
 pub struct KusaColor {
     pub r: u8,
     pub g: u8,

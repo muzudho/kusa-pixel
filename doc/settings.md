@@ -75,3 +75,16 @@ settings.json:
 ```
 
 👆 Now it's just a pen. Draw a point  
+
+```json
+{
+    "paint_color": {
+        "r": 128,
+        "g": 128,
+        "b": 255,
+        "a": 255
+    }
+}
+```
+
+👆 Colors to be painted, 0-255. r is red, g is green, b is blue. rgb is 0 for black. a is 255 for opaque

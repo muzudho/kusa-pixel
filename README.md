@@ -17,7 +17,8 @@ It is intended to be developed and run using Visual Studio Code on Windows.
 * It is a pain in the ass to create a GUI,  
 so please edit the configuration file for pen thickness and other settings.
 * It's a hassle, so the configuration file is not very structured and flat.
-
+* There are no features to make your work more convenient.  
+For example, there is no color palette. There is only one pen color that can be set in the settings file.
 ## Build
 
 ```shell

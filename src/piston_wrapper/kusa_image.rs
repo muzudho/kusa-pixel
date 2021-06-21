@@ -1,4 +1,4 @@
-use crate::data::kusa_argb::KusaColor;
+use crate::data::kusa_color::KusaColor;
 use image::*;
 use std::path::Path;
 //use crate::piston_wrapper::kusa_image::KusaImage;

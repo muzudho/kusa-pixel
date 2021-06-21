@@ -1,2 +1,2 @@
-pub mod kusa_argb;
+pub mod kusa_color;
 pub mod pointing;

@@ -1,4 +1,3 @@
-use crate::data::kusa_argb::KusaColor;
 use crate::data::pointing::Pointing;
 use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::Settings;
@@ -48,16 +47,7 @@ impl Pen {
     pub fn put_dot(k_image: &mut KusaImage, pointing: &Pointing, settings: &Settings) {
         // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
         if let Some(coord) = coord_on_image(pointing.x, pointing.y, settings) {
-            k_image.set_pixel(
-                coord.0 as u32,
-                coord.1 as u32,
-                &KusaColor {
-                    r: 255,
-                    g: 0,
-                    b: 0,
-                    a: 255,
-                },
-            );
+            k_image.set_pixel(coord.0 as u32, coord.1 as u32, &settings.paint_color);
         }
     }
 
@@ -78,7 +68,7 @@ impl Pen {
                     k_image.set_dot(
                         (coord.0 + col as i32) as u32,
                         (coord.1 + row as i32) as u32,
-                        &KusaColor::new(255, 0, 0, 255),
+                        &settings.paint_color,
                     );
                 }
             };
@@ -103,7 +93,7 @@ impl Pen {
                     k_image.set_dot(
                         (coord.0 + col as i32) as u32,
                         (coord.1 + row as i32) as u32,
-                        &KusaColor::new(255, 0, 0, 255),
+                        &settings.paint_color,
                     );
                 }
             };

@@ -1,4 +1,5 @@
 //! 設定ファイル
+use crate::data::kusa_color::KusaColor;
 use serde::Deserialize;
 use std::fs::File;
 use std::io::Read;
@@ -28,7 +29,10 @@ pub struct Settings {
     pub canvas_grid_color: [f32; 4],
     // 描画ツールの種類
     pub paint_tool: String,
+    // 描画色
+    pub paint_color: KusaColor,
 }
+
 impl Settings {
     /// 設定ファイル読込。
     pub fn load() -> Self {
