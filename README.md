@@ -34,7 +34,19 @@ cargo build
 ## Run
 
 ```shell
-cargo run
+cargo run --example example1
+```
+
+## Example
+
+Your code:  
+
+```rust
+use kusa_pixel::run;
+
+fn main() {
+    run();
+}
 ```
 
 ## Features

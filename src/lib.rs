@@ -1,10 +1,13 @@
+//! A pixel art painter for people who are sick of GUIs.
+
 // Publish:
 //
 // (1) Version up on Cargo.toml.
-// (2) `cargo doc --open`
-// (3) Comit to Git-hub.
-// (4) `cargo publish --dry-run`
-// (5) `cargo publish`
+// (2) `cargo run --example example1`
+// (3) `cargo doc --open`
+// (4) Comit to Git-hub.
+// (5) `cargo publish --dry-run`
+// (6) `cargo publish`
 
 extern crate camera_controllers;
 extern crate find_folder;
@@ -31,7 +34,7 @@ use crate::settings::*;
 use crate::window_operation::*;
 use std::path::Path;
 
-fn main() {
+pub fn run() {
     // 設定ファイルを読み込もうぜ☆（＾～＾）
     let mut settings = Settings::load();
 
