@@ -8,9 +8,9 @@ impl Image {
     /// 各マスに色を打っていくぜ☆（＾～＾）
     pub fn draw(settings: &Settings, frame: &Frame, c: &Context, g: &mut G2d) {
         // タテへ
-        for row in 0..settings.height {
+        for row in 0..settings.image_height {
             // ヨコへ
-            for col in 0..settings.width {
+            for col in 0..settings.image_width {
                 let dot = frame.get_dot(col, row);
                 let x = col as f64 * settings.canvas_dot_width + settings.canvas_margin_x;
                 let y = row as f64 * settings.canvas_dot_height + settings.canvas_margin_y;

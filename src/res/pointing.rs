@@ -48,10 +48,10 @@ pub struct Sizing {
 impl Sizing {
     pub fn load_canvas(settings: &Settings) -> Self {
         Sizing {
-            width: settings.width as f64 * settings.canvas_dot_width,
-            height: settings.height as f64 * settings.canvas_dot_height,
-            cols: settings.width as i32,
-            rows: settings.height as i32,
+            width: settings.image_width as f64 * settings.canvas_dot_width,
+            height: settings.image_height as f64 * settings.canvas_dot_height,
+            cols: settings.image_width as i32,
+            rows: settings.image_height as i32,
         }
     }
     pub fn diff(cursor: &Pointing, pressed_pos: &Pointing) -> Self {

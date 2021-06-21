@@ -69,7 +69,7 @@ pub fn show_window(mut settings: Settings, frame: &mut Frame) {
 
             /*
             // 画像を丸ごと再描画します。
-            image(&texture, c.transform.zoom(settings.zoom), g);
+            image(&texture, c.transform.zoom(settings.canvas_zoom), g);
             */
 
             // 点を１個描くぜ☆（＾～＾）データとしての保存は別のところでやってるぜ☆（＾～＾）

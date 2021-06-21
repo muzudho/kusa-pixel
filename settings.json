@@ -1,8 +1,8 @@
 {
     "image_file": "./work/image.png",
-    "width": 64,
-    "height": 96,
-    "zoom": 1.0,
+    "image_width": 64,
+    "image_height": 96,
+    "canvas_zoom": 1.0,
     "canvas_margin_x": 20.0,
     "canvas_margin_y": 10.0,
     "canvas_dot_width": 10.0,

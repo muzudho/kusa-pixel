@@ -27,13 +27,13 @@ fn main() {
         Ok(img) => {
             // 画像を読み込んで始まりたいぜ☆（＾～＾）
             let frame = Frame::load_image(&img);
-            settings.width = frame.width;
-            settings.height = frame.height;
+            settings.image_width = frame.width;
+            settings.image_height = frame.height;
             frame
         }
         Err(_e) => {
             // 画像が読み込めなければ、設定ファイルで指定されたサイズで新規作成☆（＾～＾）
-            let frame = Frame::new(settings.width, settings.height);
+            let frame = Frame::new(settings.image_width, settings.image_height);
             write_frame(&frame, &settings.image_file);
             frame
         }

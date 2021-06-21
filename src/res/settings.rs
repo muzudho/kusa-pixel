@@ -10,11 +10,11 @@ pub struct Settings {
     // 画像ファイルパス。assetsディレクトリーの下から
     pub image_file: String,
     // 画像ファイルの横幅
-    pub width: u32,
+    pub image_width: u32,
     // 画像ファイルの縦幅
-    pub height: u32,
+    pub image_height: u32,
     // 拡大率
-    pub zoom: f64,
+    pub canvas_zoom: f64,
     // クライアント領域の左上からのオフセット
     pub canvas_margin_x: f64,
     pub canvas_margin_y: f64,

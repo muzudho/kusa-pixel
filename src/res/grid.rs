@@ -6,7 +6,7 @@ pub struct Grid {}
 impl Grid {
     pub fn draw(settings: &Settings, canvas_size: &Sizing, c: &Context, g: &mut G2d) {
         // タテ線
-        for col in 0..(settings.width + 1) {
+        for col in 0..(settings.image_width + 1) {
             line(
                 settings.canvas_grid_color,
                 settings.canvas_grid_thickness, // radius
@@ -22,7 +22,7 @@ impl Grid {
         }
 
         // ヨコ線
-        for row in 0..(settings.height + 1) {
+        for row in 0..(settings.image_height + 1) {
             line(
                 settings.canvas_grid_color,
                 settings.canvas_grid_thickness, // radius
