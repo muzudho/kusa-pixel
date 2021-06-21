@@ -1,6 +1,8 @@
+use crate::data::input_state::InputState;
 use crate::data::pointing::{Pointing, Sizing};
 use crate::grid::Grid;
-use crate::paint_tool::{PaintOperation, Pen};
+use crate::paint_tool::pen::Pen;
+use crate::paint_tool::PaintOperation;
 use crate::piston_wrapper::kusa_image::write_k_image;
 use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::Settings;
@@ -22,6 +24,7 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
         .unwrap();
 
     // let texture = create_texture(&settings.image_file, &mut window);
+    let mut input_state = InputState {};
     let mut k_mouse_cursor = Pointing::default();
     let mut is_mouse_pressed = false;
     let mut pressed_pos = k_mouse_cursor;
