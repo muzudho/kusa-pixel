@@ -1,4 +1,4 @@
-use crate::pointing::Sizing;
+use crate::data::pointing::Sizing;
 use crate::settings::Settings;
 use piston_window::*;
 

@@ -1,5 +1,5 @@
+use crate::data::pointing::{Pointing, Sizing};
 use crate::piston_wrapper::kusa_image::{Dot, KusaImage};
-use crate::pointing::{Pointing, Sizing};
 use crate::settings::Settings;
 use piston_window::*;
 

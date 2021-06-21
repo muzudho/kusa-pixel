@@ -1,8 +1,8 @@
+use crate::data::pointing::{Pointing, Sizing};
 use crate::grid::Grid;
 use crate::paint_tool::{PaintOperation, Pen};
 use crate::piston_wrapper::kusa_image::write_k_image;
 use crate::piston_wrapper::kusa_image::KusaImage;
-use crate::pointing::{Pointing, Sizing};
 use crate::settings::Settings;
 use piston_window::*;
 
@@ -15,8 +15,8 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
         .unwrap();
 
     // let texture = create_texture(&settings.image_file, &mut window);
-    let mut cursor = Pointing::default();
-    let mut pressed_pos = cursor;
+    let mut k_mouse_cursor = Pointing::default();
+    let mut pressed_pos = k_mouse_cursor;
 
     let assets = find_folder::Search::ParentsThenKids(3, 3)
         .for_folder("assets")
@@ -26,11 +26,11 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
         .load_font(assets.join("font/NotoSans-Medium.ttf"))
         .unwrap();
 
-    let mut count: u64 = 0;
+    let mut count_to_reload: u64 = 0;
     // Event loop.
     window.set_lazy(true);
     while let Some(e) = window.next() {
-        if count % 1000 == 999 {
+        if count_to_reload % 1000 == 999 {
             // ミリ秒の取り方が分からなかったぜ☆（＾～＾）
             // イベント・ループの中で　ファイル入出力するのは　クソだが　使い慣れてないんで仕方ないぜ☆（＾～＾）
             // 設定ファイルを監視するぜ☆（＾～＾）
@@ -39,31 +39,39 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
                 "Trace   | Load settings☆（＾～＾） paint_tool=|{}|",
                 settings.paint_tool
             );
+            count_to_reload = 0;
+        } else {
+            count_to_reload += 1;
         }
-        count += 1;
         // マウスカーソルの座標を補足するぜ☆（＾～＾）
         e.mouse_cursor(|pos| {
-            cursor = Pointing::from_pos(pos, &settings);
+            k_mouse_cursor = Pointing::from_pos(pos, &settings);
         });
 
-        // Pressed
+        // ⚡Mouse button pressed
         if let Some(_button) = e.press_args() {
-            pressed_pos = cursor.clone();
+            pressed_pos = k_mouse_cursor.clone();
             println!("Trace   | ボタンが押されたぜ☆（＾～＾） {:?}", pressed_pos);
         }
 
+        // TODO ⚡Mouse move
+
+        // ⚡Mouse button released
         if let Some(_button) = e.release_args() {
             println!("Trace   | ボタンを離したぜ☆（＾～＾）");
-            let sizing = Sizing::diff(&cursor, &pressed_pos);
+            let sizing = Sizing::diff(&k_mouse_cursor, &pressed_pos);
 
             // 線を引きます。
             Pen::set_dots(k_image, &pressed_pos, &sizing);
 
-            println!("Trace   | Click ({}, {}) 保存", &cursor.x, &cursor.y);
+            println!(
+                "Trace   | Click ({}, {}) 保存",
+                &k_mouse_cursor.x, &k_mouse_cursor.y
+            );
             write_k_image(&k_image, &settings.image_file);
         }
 
-        // draw
+        // ⚡Window paint
         window.draw_2d(&e, |c, g, device| {
             clear([1.0; 4], g);
 
@@ -122,7 +130,7 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
             // TODO 座標を表示したいぜ☆（＾～＾）
             text::Text::new_color([0.0, 0.0, 0.0, 1.0], 32)
                 .draw(
-                    &format!("cell({}, {})", cursor.x, cursor.y),
+                    &format!("cell({}, {})", k_mouse_cursor.x, k_mouse_cursor.y),
                     &mut glyphs,
                     &c.draw_state,
                     c.transform.trans(10.0, 30.0), // y位置を揃えるのはむずかしいぜ☆（＾～＾）

@@ -1,5 +1,7 @@
 # Settings
 
+This settings file is read every second.  
+
 settings.json:  
 
 ```json

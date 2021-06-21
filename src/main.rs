@@ -10,10 +10,10 @@ extern crate serde_json;
 extern crate shader_version;
 extern crate vecmath;
 
+mod data;
 mod grid;
 mod paint_tool;
 mod piston_wrapper;
-mod pointing;
 mod settings;
 mod window_operation;
 
