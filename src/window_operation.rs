@@ -94,14 +94,14 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
                 //);
             }
 
-            paint_tool.on_mouse_moved(&settings, &input_state, k_image);
-
-            if input_state.is_mouse_pressed {
-                // 更新
-                input_state.previous_point.x += input_state.moved_vector.x;
-                input_state.previous_point.y += input_state.moved_vector.y;
-                input_state.moved_vector.x = 0.0;
-                input_state.moved_vector.y = 0.0;
+            if paint_tool.on_mouse_moved(&settings, &input_state, k_image) {
+                if input_state.is_mouse_pressed {
+                    // 更新
+                    input_state.previous_point.x += input_state.moved_vector.x;
+                    input_state.previous_point.y += input_state.moved_vector.y;
+                    input_state.moved_vector.x = 0.0;
+                    input_state.moved_vector.y = 0.0;
+                }
             }
         }
 

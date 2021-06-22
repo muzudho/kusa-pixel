@@ -1,6 +1,8 @@
 pub mod pen;
 
 use crate::data::input_state::InputState;
+use crate::data::pointing::KusaCell;
+use crate::data::pointing::KusaPoint;
 use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::Settings;
 use piston_window::*;
@@ -23,28 +25,30 @@ pub trait PaintTool {
         settings: &Settings,
         input_state: &InputState,
         k_image: &mut KusaImage,
-    );
+    ) -> bool;
 }
 
 /// # Arguments
 ///
-/// * `sc_x` - スクリーン座標
-/// * `sc_y` - スクリーン座標
+/// * `sc_coord` - スクリーン座標
 ///
 /// # Returns
 ///
 /// 画像上の座標
-pub fn screen_to_image(sc_x: f64, sc_y: f64, settings: &Settings) -> Option<(i32, i32)> {
+pub fn screen_to_image(settings: &Settings, sc_coord: &KusaPoint) -> Option<KusaCell> {
     // 画像上の座標
-    let im_x = (sc_x - settings.canvas_margin_left) / settings.canvas_dot_width;
-    let im_y = (sc_y - settings.canvas_margin_top) / settings.canvas_dot_height;
+    let im_x = (sc_coord.x - settings.canvas_margin_left) / settings.canvas_dot_width;
+    let im_y = (sc_coord.y - settings.canvas_margin_top) / settings.canvas_dot_height;
 
     if 0.0 <= im_x
         && im_x < settings.image_width as f64
         && 0.0 <= im_y
         && im_y < settings.image_height as f64
     {
-        return Some((im_x as i32, im_y as i32));
+        return Some(KusaCell {
+            x: im_x as i32,
+            y: im_y as i32,
+        });
     } else {
         return None;
     }

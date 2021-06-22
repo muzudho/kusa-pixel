@@ -7,8 +7,8 @@
     "canvas_margin_right": 20.0,
     "canvas_margin_top": 10.0,
     "canvas_margin_bottom": 10.0,
-    "canvas_dot_width": 10.0,
-    "canvas_dot_height": 10.0,
+    "canvas_dot_width": 20.0,
+    "canvas_dot_height": 20.0,
     "canvas_grid_thickness": 0.5,
     "canvas_grid_color": [
         0.0,
@@ -18,9 +18,9 @@
     ],
     "paint_tool": "pen",
     "paint_color": {
-        "r": 150,
-        "g": 255,
-        "b": 200,
+        "r": 230,
+        "g": 230,
+        "b": 180,
         "a": 255
     }
 }
