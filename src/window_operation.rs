@@ -24,10 +24,8 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
         .unwrap();
 
     // let texture = create_texture(&settings.image_file, &mut window);
-    let mut input_state = InputState {};
+    let mut input_state = InputState::default();
     let mut k_mouse_cursor = Pointing::default();
-    let mut is_mouse_pressed = false;
-    let mut pressed_pos = k_mouse_cursor;
 
     let assets = find_folder::Search::ParentsThenKids(3, 3)
         .for_folder("assets")
@@ -63,33 +61,45 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
         // ⚡Mouse button pressed
         // 📖 [PressEvent](https://docs.piston.rs/piston_window/piston_window/trait.PressEvent.html)
         if let Some(_button) = e.press_args() {
-            is_mouse_pressed = true;
-            pressed_pos = k_mouse_cursor.clone();
+            input_state.is_mouse_pressed = true;
+            input_state.pressed_coord = k_mouse_cursor.clone();
             //println!("Trace   | ボタンが押されたぜ☆（＾～＾） {:?}", pressed_pos);
 
-            // 点を置きます
-            Pen::put_dot(k_image, &pressed_pos, &settings);
+            match settings.paint_tool.as_str() {
+                "pen" => {
+                    // 点を置きます
+                    Pen::put_dot(k_image, &input_state.pressed_coord, &settings);
 
-            // 保存
-            write_k_image(&k_image, &settings.image_file);
+                    // 保存
+                    write_k_image(&k_image, &settings.image_file);
+                }
+                _ => {}
+            }
         }
 
         // TODO ⚡Mouse move
         // 📖 [MouseRelativeEvent](https://docs.piston.rs/piston_window/piston_window/trait.MouseRelativeEvent.html)
         if let Some(coord) = e.mouse_relative_args() {
-            if is_mouse_pressed {
+            if input_state.is_mouse_pressed {
                 let dx = coord[0];
                 let dy = coord[1];
-                pressed_pos.x += dx;
-                pressed_pos.y += dy;
+                input_state.pressed_coord.x += dx;
+                input_state.pressed_coord.y += dy;
                 //println!(
                 //    "Trace   | マウス移動中☆（＾～＾） ({:?}, {:?}) ({:?}, {:?})",
                 //    dx, dy, pressed_pos.x, pressed_pos.y
                 //);
-                // 点を置きます
-                Pen::put_dot(k_image, &pressed_pos, &settings);
-                // 保存
-                write_k_image(&k_image, &settings.image_file);
+            }
+            match settings.paint_tool.as_str() {
+                "pen" => {
+                    if input_state.is_mouse_pressed {
+                        // 点を置きます
+                        Pen::put_dot(k_image, &input_state.pressed_coord, &settings);
+                        // 保存
+                        write_k_image(&k_image, &settings.image_file);
+                    }
+                }
+                _ => {}
             }
         }
 
@@ -97,19 +107,24 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
         // 📖 [ReleaseEvent](https://docs.piston.rs/piston_window/piston_window/trait.ReleaseEvent.html)
         if let Some(_button) = e.release_args() {
             //println!("Trace   | ボタンを離したぜ☆（＾～＾）");
-            is_mouse_pressed = false;
-            /*
-            let sizing = Sizing::diff(&k_mouse_cursor, &pressed_pos);
+            input_state.is_mouse_pressed = false;
+            match settings.paint_tool.as_str() {
+                "pen" => {
+                    /*
+                    let sizing = Sizing::diff(&k_mouse_cursor, &pressed_pos);
 
-            // 線を引きます。
-            Pen::draw_line(k_image, &pressed_pos, &sizing);
+                    // 線を引きます。
+                    Pen::draw_line(k_image, &pressed_pos, &sizing);
 
-            //println!(
-            //    "Trace   | Click ({}, {}) 保存",
-            //    &k_mouse_cursor.x, &k_mouse_cursor.y
-            //);
-            write_k_image(&k_image, &settings.image_file);
-            */
+                    //println!(
+                    //    "Trace   | Click ({}, {}) 保存",
+                    //    &k_mouse_cursor.x, &k_mouse_cursor.y
+                    //);
+                    write_k_image(&k_image, &settings.image_file);
+                    */
+                }
+                _ => {}
+            }
         }
 
         // ⚡Window paint
