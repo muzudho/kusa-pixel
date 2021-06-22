@@ -25,11 +25,20 @@ impl KusaColor {
 }
 impl Default for KusaColor {
     fn default() -> Self {
+        // とりあえず白
         KusaColor {
+            r: 255,
+            g: 255,
+            b: 255,
             a: 255,
+        }
+        /*
+        KusaColor {
             r: 0,
             g: 128,
             b: 128,
+            a: 255,
         }
+        */
     }
 }
