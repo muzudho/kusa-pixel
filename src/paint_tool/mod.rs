@@ -23,8 +23,6 @@ pub trait PaintTool {
         settings: &Settings,
         input_state: &InputState,
         k_image: &mut KusaImage,
-        dx: f64,
-        dy: f64,
     );
 }
 

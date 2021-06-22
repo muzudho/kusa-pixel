@@ -15,7 +15,7 @@ impl PaintTool for Pen {
         k_image: &mut KusaImage,
     ) {
         // 点を置きます
-        Pen::put_pixel(k_image, &input_state.pressed_coord, &settings);
+        Pen::put_pixel(k_image, &input_state.pressed_point, &settings);
 
         // 保存
         write_k_image(&k_image, &settings.image_file);
@@ -25,12 +25,10 @@ impl PaintTool for Pen {
         settings: &Settings,
         input_state: &InputState,
         k_image: &mut KusaImage,
-        dx: f64,
-        dy: f64,
     ) {
         if input_state.is_mouse_pressed {
             // 移動した区間に連続した点を置きます
-            Pen::draw_line(&settings, k_image, &input_state.pressed_coord, dx, dy);
+            self.draw_line(&settings, k_image, &input_state);
             //println!(
             //    "Trace   | Click ({}, {}) 保存",
             //    &k_mouse_cursor.x, &k_mouse_cursor.y
@@ -58,20 +56,12 @@ impl Pen {
     }
 
     // 線を引くぜ（＾～＾）
-    //
-    // # Arguments
-    //
-    // * `src_sc_coord` - マウスクリックしたスクリーン座標
-    // * `sc_dx` - スクリーン上の差分x
-    // * `sc_dy` - スクリーン上の差分y
-    fn draw_line(
-        settings: &Settings,
-        k_image: &mut KusaImage,
-        src_sc_coord: &KusaPoint,
-        sc_dx: f64,
-        sc_dy: f64,
-    ) {
-        if let Some(pressed_im_coord) = screen_to_image(src_sc_coord.x, src_sc_coord.y, settings) {
+    fn draw_line(&self, settings: &Settings, k_image: &mut KusaImage, input_state: &InputState) {
+        if let Some(pressed_im_coord) = screen_to_image(
+            input_state.previous_point.x,
+            input_state.previous_point.y,
+            settings,
+        ) {
             // println!(
             //     "Trace   | pressed_im_coord 0={} 1={}",
             //     pressed_im_coord.0, pressed_im_coord.1
@@ -90,13 +80,25 @@ impl Pen {
             // }
             // //println!("Trace   | sc_dx={} sc_dy={}", sc_dx, sc_dy);
 
+            // 画像上のピクセル位置
+            let start_cell = KusaPoint {
+                x: input_state.previous_point.x / settings.canvas_dot_width,
+                y: input_state.previous_point.y / settings.canvas_dot_height,
+            };
+            let end_cell = KusaPoint {
+                x: (input_state.previous_point.x + input_state.moved_vector.x)
+                    / settings.canvas_dot_width,
+                y: (input_state.previous_point.y + input_state.moved_vector.y)
+                    / settings.canvas_dot_height,
+            };
+
             // 画像上のピクセル数を返します
-            let im_d_width = sc_dx / settings.canvas_dot_width;
-            let im_d_height = sc_dy / settings.canvas_dot_height;
+            let im_dx = end_cell.x - start_cell.x;
+            let im_dy = end_cell.y - start_cell.y;
             // ずっと |1|未満 だと何も描かれないので、
             // 1未満は 1に切り上げます。-1未満は-1に切り上げます
-            let im_width = {
-                let mut im_width = im_d_width.abs();
+            let im_dx_len = {
+                let mut im_width = im_dx.abs();
                 if 0.0 < im_width && im_width < 1.0 {
                     im_width = 1.0;
                 } else if -1.0 < im_width && im_width < 0.0 {
@@ -104,8 +106,8 @@ impl Pen {
                 }
                 im_width
             };
-            let im_height = {
-                let mut im_height = im_d_height.abs();
+            let im_dy_len = {
+                let mut im_height = im_dy.abs();
                 if 0.0 < im_height && im_height < 1.0 {
                     im_height = 1.0;
                 } else if -1.0 < im_height && im_height < 0.0 {
@@ -116,16 +118,16 @@ impl Pen {
             //println!("Trace   | sc_dx={} sc_dy={}", sc_dx, sc_dy);
 
             // 横長
-            let im_landscape = im_height < im_width;
+            let im_landscape = im_dy_len < im_dx_len;
             // 長い方の辺の正負を返します。 1 or -1
             let im_long_edge_sign = if im_landscape {
-                if im_d_width.is_sign_positive() {
+                if im_dx.is_sign_positive() {
                     1
                 } else {
                     -1
                 }
             } else {
-                if im_d_height.is_sign_positive() {
+                if im_dy.is_sign_positive() {
                     1
                 } else {
                     -1
@@ -133,14 +135,14 @@ impl Pen {
             };
             // 短い方の辺の比を返します
             let im_short_edge_rate = if im_landscape {
-                if 0.0 < im_width {
-                    im_height / im_width
+                if 0.0 < im_dx_len {
+                    im_dy_len / im_dx_len
                 } else {
                     0.0
                 }
             } else {
-                if 0.0 < im_height {
-                    im_width / im_height
+                if 0.0 < im_dy_len {
+                    im_dx_len / im_dy_len
                 } else {
                     0.0
                 }
@@ -162,13 +164,13 @@ impl Pen {
                     }
                 };
                 if 0 <= im_long_edge_sign {
-                    println!("Trace   | 右へ☆（＾～＾） im_width={}", im_width);
-                    for im_d_col in 1..(im_width as i32 + 1) {
+                    println!("Trace   | 右へ☆（＾～＾） im_dx_len={}", im_dx_len);
+                    for im_d_col in 1..(im_dx_len as i32 + 1) {
                         draw_horizontal(im_d_col);
                     }
                 } else {
                     //println!("Trace   | 左へ☆（＾～＾）");
-                    for im_d_col in (1..(im_width as i32 + 1)).rev() {
+                    for im_d_col in (1..(im_dx_len as i32 + 1)).rev() {
                         draw_horizontal(im_long_edge_sign * im_d_col);
                     }
                 }
@@ -195,12 +197,12 @@ impl Pen {
                 };
                 if 0 <= im_long_edge_sign {
                     //println!("Trace   | 下へ☆（＾～＾）");
-                    for im_d_row in 1..(im_height as i32 + 1) {
+                    for im_d_row in 1..(im_dy_len as i32 + 1) {
                         draw_vertical(im_d_row);
                     }
                 } else {
                     //println!("Trace   | 上へ☆（＾～＾）");
-                    for im_d_row in (1..(im_height as i32 + 1)).rev() {
+                    for im_d_row in (1..(im_dy_len as i32 + 1)).rev() {
                         draw_vertical(im_long_edge_sign * im_d_row);
                     }
                 }

@@ -58,3 +58,4 @@ fn main() {
 ## Documents
 
 [Settings](./doc/settings.md)  
+[Design](./doc/design.md)  

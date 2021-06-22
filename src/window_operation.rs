@@ -71,8 +71,10 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
         // 📖 [PressEvent](https://docs.piston.rs/piston_window/piston_window/trait.PressEvent.html)
         if let Some(_button) = e.press_args() {
             input_state.is_mouse_pressed = true;
-            input_state.pressed_coord = k_mouse_cursor.clone();
+            input_state.pressed_point = k_mouse_cursor.clone();
             //println!("Trace   | ボタンが押されたぜ☆（＾～＾） {:?}", pressed_pos);
+            input_state.previous_point.x = input_state.pressed_point.x;
+            input_state.previous_point.y = input_state.pressed_point.y;
 
             paint_tool.on_mouse_pressed(&settings, &input_state, k_image);
         }
@@ -83,16 +85,23 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
             let dx = coord[0];
             let dy = coord[1];
 
-            paint_tool.on_mouse_moved(&settings, &input_state, k_image, dx, dy);
-
-            // イベントハンドラを呼び出したあとで更新
             if input_state.is_mouse_pressed {
-                input_state.pressed_coord.x += dx;
-                input_state.pressed_coord.y += dy;
+                input_state.moved_vector.x += dx;
+                input_state.moved_vector.y += dy;
                 //println!(
                 //    "Trace   | マウス移動中☆（＾～＾） ({:?}, {:?}) ({:?}, {:?})",
                 //    dx, dy, pressed_pos.x, pressed_pos.y
                 //);
+            }
+
+            paint_tool.on_mouse_moved(&settings, &input_state, k_image);
+
+            if input_state.is_mouse_pressed {
+                // 更新
+                input_state.previous_point.x += input_state.moved_vector.x;
+                input_state.previous_point.y += input_state.moved_vector.y;
+                input_state.moved_vector.x = 0.0;
+                input_state.moved_vector.y = 0.0;
             }
         }
 
@@ -100,8 +109,14 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
         // 📖 [ReleaseEvent](https://docs.piston.rs/piston_window/piston_window/trait.ReleaseEvent.html)
         if let Some(_button) = e.release_args() {
             //println!("Trace   | ボタンを離したぜ☆（＾～＾）");
-            input_state.is_mouse_pressed = false;
             paint_tool.on_mouse_released(&settings, &input_state, k_image);
+            input_state.is_mouse_pressed = false;
+            input_state.pressed_point.x = 0.0;
+            input_state.pressed_point.y = 0.0;
+            input_state.moved_vector.x = 0.0;
+            input_state.moved_vector.y = 0.0;
+            input_state.previous_point.x = 0.0;
+            input_state.previous_point.y = 0.0;
         }
 
         // ⚡Window paint
