@@ -30,7 +30,11 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
     let mut input_state = InputState::default();
     let mut k_mouse_cursor = KusaPoint::default();
     let mut paint_tool = Pen {};
-    let paint_nib = SquareNib {};
+    let paint_nib = match settings.paint_nib.as_str() {
+        "Square" => SquareNib {},
+        "Circle" => SquareNib {},
+        _ => SquareNib {},
+    };
 
     let assets = find_folder::Search::ParentsThenKids(3, 3)
         .for_folder("assets")
