@@ -31,6 +31,8 @@ pub struct Settings {
     pub canvas_grid_color: [f32; 4],
     // 描画ツールの種類
     pub paint_tool: String,
+    // 描画ツールのペン先の種類
+    pub paint_nib: String,
     // 描画色
     pub paint_color: KusaColor,
     // 描画ツールの線の太さ
@@ -52,6 +54,7 @@ impl Default for Settings {
             canvas_grid_thickness: 0.5,
             canvas_grid_color: [0.0, 0.0, 0.0, 1.0],
             paint_tool: "Pen".to_string(),
+            paint_nib: "Circle".to_string(),
             paint_color: KusaColor {
                 r: 230,
                 g: 230,

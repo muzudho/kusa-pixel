@@ -1,5 +1,5 @@
 pub mod pen;
-pub mod square_pen_nibs;
+pub mod square_nib;
 
 use crate::data::input_state::InputState;
 use crate::data::pointing::KusaCell;

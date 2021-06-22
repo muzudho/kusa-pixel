@@ -3,6 +3,7 @@ use crate::data::pointing::{KusaPoint, KusaSize};
 use crate::grid::Grid;
 use crate::paint_tool::pen::*;
 use crate::paint_tool::screen_to_image;
+use crate::paint_tool::square_nib::SquareNib;
 use crate::paint_tool::PaintOperation;
 use crate::paint_tool::PaintTool;
 use crate::piston_wrapper::kusa_image::KusaImage;
@@ -28,10 +29,8 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
     // let texture = create_texture(&settings.image_file, &mut window);
     let mut input_state = InputState::default();
     let mut k_mouse_cursor = KusaPoint::default();
-    let mut paint_tool = match settings.paint_tool.as_str() {
-        "pen" => Pen {},
-        _ => Pen {},
-    };
+    let mut paint_tool = Pen {};
+    let mut paint_nib = SquareNib {};
 
     let assets = find_folder::Search::ParentsThenKids(3, 3)
         .for_folder("assets")

@@ -59,3 +59,4 @@ fn main() {
 
 [Settings](./doc/settings.md)  
 [Design](./doc/design.md)  
+[Blog](https://crieit.net/drafts/60d190d79ec16)  

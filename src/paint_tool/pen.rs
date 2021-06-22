@@ -2,7 +2,7 @@ use crate::data::input_state::InputState;
 use crate::data::pointing::KusaPoint;
 use crate::paint_tool::screen_to_image;
 use crate::paint_tool::screen_to_image_f;
-use crate::paint_tool::square_pen_nibs::SquarePenNibs;
+use crate::paint_tool::square_nib::SquareNib;
 use crate::paint_tool::PaintTool;
 use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::Settings;
@@ -18,7 +18,7 @@ impl PaintTool for Pen {
     ) {
         if let Some(center) = screen_to_image_f(settings, &input_state.pressed_point) {
             // 点を置きます
-            SquarePenNibs::put_pixel(&settings, k_image, &center);
+            SquareNib::put_pixel(&settings, k_image, &center);
 
             // 保存
             write_k_image(&k_image, &settings.image_file);
@@ -157,7 +157,7 @@ impl Pen {
                         {
                             // println!("Trace   | 水平移動 x={} y={}", x, y);
                             // 点を置きます
-                            SquarePenNibs::put_pixel(&settings, k_image, &KusaPoint { x: x, y: y });
+                            SquareNib::put_pixel(&settings, k_image, &KusaPoint { x: x, y: y });
                             //k_image.set_pixel(im_x as u32, im_y as u32, &settings.paint_color);
                         }
                     };
@@ -191,7 +191,7 @@ impl Pen {
                             && y < settings.image_height as f64
                         {
                             // 点を置きます
-                            SquarePenNibs::put_pixel(&settings, k_image, &KusaPoint { x: x, y: y });
+                            SquareNib::put_pixel(&settings, k_image, &KusaPoint { x: x, y: y });
                             // k_image.set_pixel(im_x as u32, im_y as u32, &settings.paint_color);
                         }
                     };
@@ -209,7 +209,7 @@ impl Pen {
                 }
 
                 // 終点を塗ります
-                SquarePenNibs::put_pixel(
+                SquareNib::put_pixel(
                     &settings,
                     k_image,
                     &KusaPoint {
