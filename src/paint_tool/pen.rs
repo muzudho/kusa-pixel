@@ -3,6 +3,7 @@ use crate::data::pointing::KusaPoint;
 use crate::paint_tool::screen_to_image;
 use crate::paint_tool::screen_to_image_f;
 use crate::paint_tool::square_nib::SquareNib;
+use crate::paint_tool::Nib;
 use crate::paint_tool::PaintTool;
 use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::Settings;

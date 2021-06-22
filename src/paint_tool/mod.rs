@@ -32,6 +32,10 @@ pub trait PaintTool {
     ) -> bool;
 }
 
+pub trait Nib {
+    fn put_pixel(&self, settings: &Settings, k_image: &mut KusaImage, center: &KusaPoint);
+}
+
 /// # Arguments
 ///
 /// * `sc_coord` - スクリーン座標
