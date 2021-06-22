@@ -1,6 +1,7 @@
 use crate::data::input_state::InputState;
 use crate::data::pointing::KusaPoint;
 use crate::paint_tool::screen_to_image;
+use crate::paint_tool::square_pen_nibs::SquarePenNibs;
 use crate::paint_tool::PaintTool;
 use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::Settings;
@@ -15,7 +16,8 @@ impl PaintTool for Pen {
         k_image: &mut KusaImage,
     ) {
         // 点を置きます
-        Pen::put_pixel(&settings, k_image, &input_state.pressed_point);
+        // PixelPenNibs::put_pixel(&settings, k_image, &input_state.pressed_point);
+        SquarePenNibs::put_pixel(&settings, k_image, &input_state.pressed_point);
 
         // 保存
         write_k_image(&k_image, &settings.image_file);
@@ -63,25 +65,6 @@ impl Pen {
         }
     }
     */
-
-    /// TODO 正方形を塗り潰すぜ（＾～＾）
-    ///
-    /// # Arguments
-    ///
-    /// * `sc_center` - スクリーン座標で円の中心位置
-    fn fill_circle(settings: &Settings, k_image: &mut KusaImage, sc_center: &KusaPoint) {
-        if let Some(coord) = screen_to_image(settings, sc_center) {
-            k_image.set_pixel(coord.x as u32, coord.y as u32, &settings.paint_color);
-        }
-    }
-
-    // 点を置くぜ（＾～＾）
-    fn put_pixel(settings: &Settings, k_image: &mut KusaImage, sc_coord: &KusaPoint) {
-        // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
-        if let Some(coord) = screen_to_image(settings, sc_coord) {
-            k_image.set_pixel(coord.x as u32, coord.y as u32, &settings.paint_color);
-        }
-    }
 
     // 線を引くぜ（＾～＾）
     fn draw_line(
