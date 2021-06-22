@@ -49,8 +49,7 @@ settings.json:
 
 ```json
 {
-    "canvas_dot_width": 10.0,
-    "canvas_dot_height": 10.0
+    "canvas_cell_size": 10.0
 }
 ```
 

@@ -13,10 +13,10 @@ pub fn show_window(settings: Settings, k_image: &mut KusaImage) {
     let opengl = OpenGL::V3_2;
 
     let width = settings.canvas_margin_left
-        + settings.image_width as f64 * settings.canvas_dot_width
+        + settings.image_width as f64 * settings.canvas_cell_size
         + settings.canvas_margin_right;
     let height = settings.canvas_margin_top
-        + settings.image_height as f64 * settings.canvas_dot_height
+        + settings.image_height as f64 * settings.canvas_cell_size
         + settings.canvas_margin_bottom;
     let mut window: PistonWindow = WindowSettings::new("piston: image", [width, height])
         .exit_on_esc(true)
@@ -177,8 +177,8 @@ pub fn show_window(settings: Settings, k_image: &mut KusaImage) {
 
             // グリッド
             let canvas_size = KusaSize {
-                width: settings.image_width as f64 * settings.canvas_dot_width,
-                height: settings.image_height as f64 * settings.canvas_dot_height,
+                width: settings.image_width as f64 * settings.canvas_cell_size,
+                height: settings.image_height as f64 * settings.canvas_cell_size,
             };
             Grid::draw(&settings, &canvas_size, &c, g);
 

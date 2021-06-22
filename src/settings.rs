@@ -23,10 +23,8 @@ pub struct Settings {
     pub canvas_margin_right: f64,
     pub canvas_margin_bottom: f64,
     pub canvas_margin_left: f64,
-    // セルの横幅
-    pub canvas_dot_width: f64,
-    // セルの縦幅
-    pub canvas_dot_height: f64,
+    // セルの横幅、縦幅
+    pub canvas_cell_size: f64,
     // グリッドの太さ
     pub canvas_grid_thickness: f64,
     // グリッドの色
@@ -46,12 +44,11 @@ impl Default for Settings {
             image_width: 64,
             image_height: 32,
             canvas_zoom: 1.0,
-            canvas_margin_top: 10.0,
-            canvas_margin_right: 10.0,
-            canvas_margin_bottom: 10.0,
-            canvas_margin_left: 10.0,
-            canvas_dot_width: 4.0,
-            canvas_dot_height: 4.0,
+            canvas_margin_top: 8.0,
+            canvas_margin_right: 8.0,
+            canvas_margin_bottom: 8.0,
+            canvas_margin_left: 8.0,
+            canvas_cell_size: 8.0,
             canvas_grid_thickness: 0.5,
             canvas_grid_color: [0.0, 0.0, 0.0, 1.0],
             paint_tool: "Pen".to_string(),

@@ -1,6 +1,7 @@
 use crate::data::input_state::InputState;
 use crate::data::pointing::KusaPoint;
 use crate::paint_tool::screen_to_image;
+use crate::paint_tool::screen_to_image_f;
 use crate::paint_tool::square_pen_nibs::SquarePenNibs;
 use crate::paint_tool::PaintTool;
 use crate::piston_wrapper::kusa_image::KusaImage;
@@ -15,12 +16,13 @@ impl PaintTool for Pen {
         input_state: &InputState,
         k_image: &mut KusaImage,
     ) {
-        // 点を置きます
-        // PixelPenNibs::put_pixel(&settings, k_image, &input_state.pressed_point);
-        SquarePenNibs::put_pixel(&settings, k_image, &input_state.pressed_point);
+        if let Some(center) = screen_to_image_f(settings, &input_state.pressed_point) {
+            // 点を置きます
+            SquarePenNibs::put_pixel(&settings, k_image, &center);
 
-        // 保存
-        write_k_image(&k_image, &settings.image_file);
+            // 保存
+            write_k_image(&k_image, &settings.image_file);
+        }
     }
     fn on_mouse_moved(
         &self,
@@ -143,67 +145,78 @@ impl Pen {
                 };
                 if landscape {
                     // 横幅の方が長ければ。
-                    let draw_horizontal = &mut |interpolation_x| {
-                        let interpolation_y = (short_edge_rate * interpolation_x as f64) as i32;
+                    let draw_horizontal = &mut |interpolation_x: f64| {
+                        let interpolation_y = short_edge_rate * interpolation_x;
                         // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
-                        let im_x = previous_cell.x + interpolation_x;
-                        let im_y = previous_cell.y + interpolation_y;
-                        //println!("Trace   | im_x={} im_y={}", im_x, im_y);
-                        if 0 <= im_x
-                            && im_x < settings.image_width as i32
-                            && 0 <= im_y
-                            && im_y < settings.image_height as i32
+                        let x = previous_cell.x as f64 + interpolation_x;
+                        let y = previous_cell.y as f64 + interpolation_y;
+                        if 0.0 <= x
+                            && x < settings.image_width as f64
+                            && 0.0 <= y
+                            && y < settings.image_height as f64
                         {
-                            k_image.set_pixel(im_x as u32, im_y as u32, &settings.paint_color);
+                            // println!("Trace   | 水平移動 x={} y={}", x, y);
+                            // 点を置きます
+                            SquarePenNibs::put_pixel(&settings, k_image, &KusaPoint { x: x, y: y });
+                            //k_image.set_pixel(im_x as u32, im_y as u32, &settings.paint_color);
                         }
                     };
                     if 0 <= long_edge_sign {
-                        //println!("Trace   | 右へ☆（＾～＾） dx_len={}", dx_len);
+                        // println!("Trace   | 右へ☆（＾～＾） dx_len={}", dx_len);
                         for x in 0..long_edge_len {
-                            draw_horizontal(x);
+                            draw_horizontal(x as f64);
                         }
                     } else {
                         //println!("Trace   | 左へ☆（＾～＾） ");
                         for x in 0..long_edge_len {
-                            draw_horizontal(long_edge_sign * x);
+                            draw_horizontal(long_edge_sign as f64 * x as f64);
                         }
                     }
                 } else {
                     // 縦幅の方が長いか同じなら。
-                    let draw_vertical = &mut |interpolation_y| {
+                    let draw_vertical = &mut |interpolation_y: f64| {
                         // println!(
                         //     "Trace   | short_edge_rate={} interpolation_y={}",
                         //     short_edge_rate, interpolation_y
                         // );
-                        let interpolation_x = (short_edge_rate * interpolation_y as f64) as i32;
+                        let interpolation_x = short_edge_rate * interpolation_y;
                         //println!("Trace   | interpolation_x={}", interpolation_x,);
                         // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
-                        let im_x = previous_cell.x + interpolation_x;
-                        let im_y = previous_cell.y + interpolation_y;
+                        let x = previous_cell.x as f64 + interpolation_x;
+                        let y = previous_cell.y as f64 + interpolation_y;
                         //println!("Trace   | im_x={} im_y={}", im_x, im_y);
-                        if 0 <= im_x
-                            && im_x < settings.image_width as i32
-                            && 0 <= im_y
-                            && im_y < settings.image_height as i32
+                        if 0.0 <= x
+                            && x < settings.image_width as f64
+                            && 0.0 <= y
+                            && y < settings.image_height as f64
                         {
-                            k_image.set_pixel(im_x as u32, im_y as u32, &settings.paint_color);
+                            // 点を置きます
+                            SquarePenNibs::put_pixel(&settings, k_image, &KusaPoint { x: x, y: y });
+                            // k_image.set_pixel(im_x as u32, im_y as u32, &settings.paint_color);
                         }
                     };
                     if 0 <= long_edge_sign {
                         //println!("Trace   | 下へ☆（＾～＾）");
                         for y in 0..long_edge_len {
-                            draw_vertical(y);
+                            draw_vertical(y as f64);
                         }
                     } else {
                         //println!("Trace   | 上へ☆（＾～＾）");
                         for y in 0..long_edge_len {
-                            draw_vertical(long_edge_sign * y);
+                            draw_vertical(long_edge_sign as f64 * y as f64);
                         }
                     }
                 }
 
                 // 終点を塗ります
-                k_image.set_pixel(end_cell.x as u32, end_cell.y as u32, &settings.paint_color);
+                SquarePenNibs::put_pixel(
+                    &settings,
+                    k_image,
+                    &KusaPoint {
+                        x: end_cell.x as f64,
+                        y: end_cell.y as f64,
+                    },
+                );
 
                 return true;
             }

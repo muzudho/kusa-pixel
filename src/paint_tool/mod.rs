@@ -38,8 +38,8 @@ pub trait PaintTool {
 /// 画像上の座標
 pub fn screen_to_image(settings: &Settings, sc_coord: &KusaPoint) -> Option<KusaCell> {
     // 画像上の座標
-    let im_x = (sc_coord.x - settings.canvas_margin_left) / settings.canvas_dot_width;
-    let im_y = (sc_coord.y - settings.canvas_margin_top) / settings.canvas_dot_height;
+    let im_x = (sc_coord.x - settings.canvas_margin_left) / settings.canvas_cell_size;
+    let im_y = (sc_coord.y - settings.canvas_margin_top) / settings.canvas_cell_size;
 
     if 0.0 <= im_x
         && im_x < settings.image_width as f64
@@ -64,8 +64,8 @@ pub fn screen_to_image(settings: &Settings, sc_coord: &KusaPoint) -> Option<Kusa
 /// 画像上の座標
 pub fn screen_to_image_f(settings: &Settings, sc_coord: &KusaPoint) -> Option<KusaPoint> {
     // 画像上の座標
-    let im_x = (sc_coord.x - settings.canvas_margin_left) / settings.canvas_dot_width;
-    let im_y = (sc_coord.y - settings.canvas_margin_top) / settings.canvas_dot_height;
+    let im_x = (sc_coord.x - settings.canvas_margin_left) / settings.canvas_cell_size;
+    let im_y = (sc_coord.y - settings.canvas_margin_top) / settings.canvas_cell_size;
 
     if 0.0 <= im_x
         && im_x < settings.image_width as f64
@@ -87,11 +87,11 @@ impl PaintOperation {
             // ヨコへ
             for col in 0..settings.image_width {
                 let k_color = k_image.get_pixel(col, row);
-                let x = col as f64 * settings.canvas_dot_width + settings.canvas_margin_left;
-                let y = row as f64 * settings.canvas_dot_height + settings.canvas_margin_top;
+                let x = col as f64 * settings.canvas_cell_size + settings.canvas_margin_left;
+                let y = row as f64 * settings.canvas_cell_size + settings.canvas_margin_top;
                 rectangle(
                     k_color.to_rgba_rate_array(),
-                    [x, y, settings.canvas_dot_width, settings.canvas_dot_height],
+                    [x, y, settings.canvas_cell_size, settings.canvas_cell_size],
                     c.transform,
                     g,
                 );

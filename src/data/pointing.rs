@@ -87,9 +87,9 @@ impl KusaSize {
 
     pub fn long_edge_cells_abs(&self, settings: &Settings) -> usize {
         if self.is_longer_edge_abs() {
-            (self.width / settings.canvas_dot_width) as usize
+            (self.width / settings.canvas_cell_size) as usize
         } else {
-            (self.height / settings.canvas_dot_height) as usize
+            (self.height / settings.canvas_cell_size) as usize
         }
     }
 
