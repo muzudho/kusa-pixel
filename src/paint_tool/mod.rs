@@ -52,28 +52,6 @@ pub fn coord_on_image(sc_x: f64, sc_y: f64, settings: &Settings) -> Option<(i32,
     }
 }
 
-pub fn x_on_image(sc_x: f64, sc_y: f64, settings: &Settings) -> Option<i32> {
-    // 画像上の座標
-    let im_x = (sc_x - settings.canvas_margin_left) / settings.canvas_dot_width;
-
-    if 0.0 <= im_x && im_x < settings.image_width as f64 {
-        return Some(im_x as i32);
-    } else {
-        return None;
-    }
-}
-
-pub fn y_on_image(sc_x: f64, sc_y: f64, settings: &Settings) -> Option<i32> {
-    // 画像上の座標
-    let im_y = (sc_y - settings.canvas_margin_top) / settings.canvas_dot_height;
-
-    if 0.0 <= im_y && im_y < settings.image_height as f64 {
-        return Some(im_y as i32);
-    } else {
-        return None;
-    }
-}
-
 pub struct PaintOperation {}
 impl PaintOperation {
     /// 各マスに色を打っていくぜ☆（＾～＾）

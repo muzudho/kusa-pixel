@@ -1,10 +1,10 @@
-use crate::data::pointing::Sizing;
+use crate::data::pointing::KusaSize;
 use crate::settings::Settings;
 use piston_window::*;
 
 pub struct Grid {}
 impl Grid {
-    pub fn draw(settings: &Settings, canvas_size: &Sizing, c: &Context, g: &mut G2d) {
+    pub fn draw(settings: &Settings, canvas_size: &KusaSize, c: &Context, g: &mut G2d) {
         // タテ線
         for col in 0..(settings.image_width + 1) {
             line(

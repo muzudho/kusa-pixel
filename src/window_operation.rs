@@ -1,5 +1,5 @@
 use crate::data::input_state::InputState;
-use crate::data::pointing::{Pointing, Sizing};
+use crate::data::pointing::{KusaSize, Pointing};
 use crate::grid::Grid;
 use crate::paint_tool::pen::*;
 use crate::paint_tool::PaintOperation;
@@ -114,7 +114,7 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
             */
 
             // 点を１個描くぜ☆（＾～＾）データとしての保存は別のところでやってるぜ☆（＾～＾）
-            // let sizing = Sizing::diff(&cursor, &pressed_pos);
+            // let sizing = KusaSize::diff(&cursor, &pressed_pos);
 
             /*
             if sizing.is_longer_width() {
@@ -158,7 +158,11 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
             // TODO 今引こうとしている線を、データに描き込まずに画面に表示したいぜ☆（＾～＾）
 
             // グリッド
-            Grid::draw(&settings, &Sizing::load_canvas(&settings), &c, g);
+            let canvas_size = KusaSize {
+                width: settings.image_width as f64 * settings.canvas_dot_width,
+                height: settings.image_height as f64 * settings.canvas_dot_height,
+            };
+            Grid::draw(&settings, &canvas_size, &c, g);
 
             // TODO 座標を表示したいぜ☆（＾～＾）
             text::Text::new_color([0.0, 0.0, 0.0, 1.0], 32)

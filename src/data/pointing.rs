@@ -1,4 +1,3 @@
-use crate::settings::Settings;
 use std::fmt;
 
 #[derive(Clone, Copy)]
@@ -27,21 +26,14 @@ impl fmt::Debug for Pointing {
 }
 
 #[derive(Clone, Copy)]
-pub struct Sizing {
+pub struct KusaSize {
     pub width: f64,
     pub height: f64,
 }
-impl Sizing {
-    pub fn load_canvas(settings: &Settings) -> Self {
-        Sizing {
-            width: settings.image_width as f64 * settings.canvas_dot_width,
-            height: settings.image_height as f64 * settings.canvas_dot_height,
-        }
-    }
-
+impl KusaSize {
     /*
     pub fn diff(settings: &Settings, moved_point: &Pointing, pressed_coord: &Pointing) -> Self {
-        let sizing = Sizing {
+        let sizing = KusaSize {
             width: moved_point.x - pressed_coord.x,
             height: moved_point.y - pressed_coord.y,
         };
@@ -55,7 +47,6 @@ impl Sizing {
         //);
         sizing
     }
-    */
 
     pub fn is_longer_edge_abs(&self) -> bool {
         self.height.abs() < self.width.abs()
@@ -85,6 +76,7 @@ impl Sizing {
             self.height / self.height.abs()
         }
     }
+    */
 
     /*
     pub fn long_edge_pixels_abs(&self) -> usize {
@@ -96,7 +88,7 @@ impl Sizing {
     }
     */
 }
-impl fmt::Debug for Sizing {
+impl fmt::Debug for KusaSize {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "pos=({}, {})", self.width, self.height)
     }
