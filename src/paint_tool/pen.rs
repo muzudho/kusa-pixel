@@ -1,5 +1,4 @@
 use crate::data::input_state::InputState;
-use crate::data::pointing::KusaCell;
 use crate::data::pointing::KusaPoint;
 use crate::paint_tool::screen_to_image;
 use crate::paint_tool::PaintTool;
@@ -94,10 +93,10 @@ impl Pen {
                 // 画像上のピクセル数を返します
                 let dx = end_cell.x - previous_cell.x;
                 let dy = end_cell.y - previous_cell.y;
-                println!(
-                    "Trace   | dx={} end_cell.x={} previous_cell.0={}",
-                    dx, end_cell.x, previous_cell.x
-                );
+                // println!(
+                //     "Trace   | dx={} end_cell.x={} previous_cell.0={}",
+                //     dx, end_cell.x, previous_cell.x
+                // );
 
                 // ずっと |1|未満 だと何も描かれないので、
                 // 1未満は 1に切り上げます。-1未満は-1に切り上げます
@@ -152,12 +151,12 @@ impl Pen {
                         }
                     };
                     if 0 <= long_edge_sign {
-                        println!("Trace   | 右へ☆（＾～＾） dx_len={}", dx_len);
+                        //println!("Trace   | 右へ☆（＾～＾） dx_len={}", dx_len);
                         for x in 0..long_edge_len {
                             draw_horizontal(x);
                         }
                     } else {
-                        println!("Trace   | 左へ☆（＾～＾） ");
+                        //println!("Trace   | 左へ☆（＾～＾） ");
                         for x in 0..long_edge_len {
                             draw_horizontal(long_edge_sign * x);
                         }
@@ -184,12 +183,12 @@ impl Pen {
                         }
                     };
                     if 0 <= long_edge_sign {
-                        println!("Trace   | 下へ☆（＾～＾）");
+                        //println!("Trace   | 下へ☆（＾～＾）");
                         for y in 0..long_edge_len {
                             draw_vertical(y);
                         }
                     } else {
-                        println!("Trace   | 上へ☆（＾～＾）");
+                        //println!("Trace   | 上へ☆（＾～＾）");
                         for y in 0..long_edge_len {
                             draw_vertical(long_edge_sign * y);
                         }

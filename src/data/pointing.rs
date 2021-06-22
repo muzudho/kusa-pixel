@@ -11,12 +11,14 @@ impl Default for KusaCell {
     }
 }
 impl KusaCell {
+    /*
     pub fn from_coord(coord: [i32; 2]) -> Self {
         KusaCell {
             x: coord[0],
             y: coord[1],
         }
     }
+    */
 }
 impl fmt::Debug for KusaCell {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
