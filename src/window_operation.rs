@@ -1,9 +1,11 @@
 use crate::data::input_state::InputState;
 use crate::data::pointing::{KusaPoint, KusaSize};
 use crate::grid::Grid;
+use crate::paint_tool::circle_nib::CircleNib;
 use crate::paint_tool::pen::*;
 use crate::paint_tool::screen_to_image;
 use crate::paint_tool::square_nib::SquareNib;
+use crate::paint_tool::Nib;
 use crate::paint_tool::PaintOperation;
 use crate::paint_tool::PaintTool;
 use crate::piston_wrapper::kusa_image::KusaImage;
@@ -30,10 +32,10 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
     let mut input_state = InputState::default();
     let mut k_mouse_cursor = KusaPoint::default();
     let mut paint_tool = Pen {};
-    let paint_nib = match settings.paint_nib.as_str() {
-        "Square" => SquareNib {},
-        "Circle" => SquareNib {},
-        _ => SquareNib {},
+    let paint_nib: &dyn Nib = match settings.paint_nib.as_str() {
+        "Square" => &(SquareNib {}) as &dyn Nib,
+        "Circle" => &(CircleNib {}) as &dyn Nib,
+        _ => &(SquareNib {}) as &dyn Nib,
     };
 
     let assets = find_folder::Search::ParentsThenKids(3, 3)
@@ -86,7 +88,7 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
             input_state.previous_point.x = input_state.pressed_point.x;
             input_state.previous_point.y = input_state.pressed_point.y;
 
-            paint_tool.on_mouse_pressed(&settings, &paint_nib, &input_state, k_image);
+            paint_tool.on_mouse_pressed(&settings, paint_nib, &input_state, k_image);
         }
 
         // TODO ⚡Mouse move
@@ -104,7 +106,7 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
                 //);
             }
 
-            if paint_tool.on_mouse_moved(&settings, &paint_nib, &input_state, k_image) {
+            if paint_tool.on_mouse_moved(&settings, paint_nib, &input_state, k_image) {
                 if input_state.is_mouse_pressed {
                     // 更新
                     input_state.previous_point.x += input_state.moved_vector.x;
