@@ -43,7 +43,7 @@ pub fn run() {
         Ok(x) => x,
         Err(_) => {
             let settings = Settings::default();
-            settings.save();
+            settings.save(&app.settings_example_path);
             settings
         }
     };
@@ -71,11 +71,13 @@ pub fn run() {
 
 pub struct KusaApp {
     settings_path: String,
+    settings_example_path: String,
 }
 impl Default for KusaApp {
     fn default() -> Self {
         KusaApp {
             settings_path: "settings.json".to_string(),
+            settings_example_path: "settings-example.json".to_string(),
         }
     }
 }

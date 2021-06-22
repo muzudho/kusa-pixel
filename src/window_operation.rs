@@ -56,7 +56,7 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
                 Err(why) => panic!("Settings load fail: {}", why),
             };
             paint_tool = match settings.paint_tool.as_str() {
-                "pen" => Pen {},
+                "Pen" => Pen {},
                 _ => Pen {},
             };
             //println!(

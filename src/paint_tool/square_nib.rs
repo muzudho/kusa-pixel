@@ -2,11 +2,18 @@ use crate::data::pointing::KusaPoint;
 use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::Settings;
 
+/*
+pub trait Nib {
+    fn put_pixel(&self, settings: &Settings, k_image: &mut KusaImage, center: &KusaPoint);
+}
+*/
+
 /// 正方形のペン先
 pub struct SquareNib {}
 impl SquareNib {
+    //impl Nib for SquareNib {
     // 点を置くぜ（＾～＾）
-    pub fn put_pixel(settings: &Settings, k_image: &mut KusaImage, center: &KusaPoint) {
+    pub fn put_pixel(&self, settings: &Settings, k_image: &mut KusaImage, center: &KusaPoint) {
         // 半径
         let radius = settings.paint_thickness / 2.0;
 

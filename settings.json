@@ -15,7 +15,8 @@
         0.0,
         1.0
     ],
-    "paint_tool": "pen",
+    "paint_tool": "Pen",
+    "paint_nib": "Circle",
     "paint_color": {
         "r": 230,
         "g": 150,

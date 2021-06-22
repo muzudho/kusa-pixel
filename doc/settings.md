@@ -71,7 +71,8 @@ settings.json:
 
 ```json
 {
-    "paint_tool": "pen"
+    "paint_tool": "Pen",
+    "paint_nib": "Circle"
 }
 ```
 

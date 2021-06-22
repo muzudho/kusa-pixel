@@ -18,7 +18,8 @@ impl PaintTool for Pen {
     ) {
         if let Some(center) = screen_to_image_f(settings, &input_state.pressed_point) {
             // 点を置きます
-            SquareNib::put_pixel(&settings, k_image, &center);
+            let nib = SquareNib {};
+            nib.put_pixel(&settings, k_image, &center);
 
             // 保存
             write_k_image(&k_image, &settings.image_file);
@@ -157,7 +158,8 @@ impl Pen {
                         {
                             // println!("Trace   | 水平移動 x={} y={}", x, y);
                             // 点を置きます
-                            SquareNib::put_pixel(&settings, k_image, &KusaPoint { x: x, y: y });
+                            let nib = SquareNib {};
+                            nib.put_pixel(&settings, k_image, &KusaPoint { x: x, y: y });
                             //k_image.set_pixel(im_x as u32, im_y as u32, &settings.paint_color);
                         }
                     };
@@ -191,7 +193,8 @@ impl Pen {
                             && y < settings.image_height as f64
                         {
                             // 点を置きます
-                            SquareNib::put_pixel(&settings, k_image, &KusaPoint { x: x, y: y });
+                            let nib = SquareNib {};
+                            nib.put_pixel(&settings, k_image, &KusaPoint { x: x, y: y });
                             // k_image.set_pixel(im_x as u32, im_y as u32, &settings.paint_color);
                         }
                     };
@@ -209,7 +212,8 @@ impl Pen {
                 }
 
                 // 終点を塗ります
-                SquareNib::put_pixel(
+                let nib = SquareNib {};
+                nib.put_pixel(
                     &settings,
                     k_image,
                     &KusaPoint {

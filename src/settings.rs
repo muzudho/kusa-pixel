@@ -88,8 +88,8 @@ impl Settings {
     }
 
     /// 設定ファイル書出し
-    pub fn save(&self) {
-        let path = Path::new("settings.json");
+    pub fn save(&self, settings_path: &str) {
+        let path = Path::new(settings_path);
         let mut file = match OpenOptions::new().write(true).create(true).open(path) {
             Ok(file) => file,
             Err(err) => panic!("Log file open error. {:?}", err),
