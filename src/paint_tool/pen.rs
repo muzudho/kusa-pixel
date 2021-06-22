@@ -2,7 +2,6 @@ use crate::data::input_state::InputState;
 use crate::data::pointing::KusaPoint;
 use crate::paint_tool::screen_to_image;
 use crate::paint_tool::screen_to_image_f;
-use crate::paint_tool::square_nib::SquareNib;
 use crate::paint_tool::Nib;
 use crate::paint_tool::PaintTool;
 use crate::piston_wrapper::kusa_image::KusaImage;
@@ -14,7 +13,7 @@ impl PaintTool for Pen {
     fn on_mouse_pressed(
         &self,
         settings: &Settings,
-        nib: &SquareNib,
+        nib: &dyn Nib,
         input_state: &InputState,
         k_image: &mut KusaImage,
     ) {
@@ -29,7 +28,7 @@ impl PaintTool for Pen {
     fn on_mouse_moved(
         &self,
         settings: &Settings,
-        nib: &SquareNib,
+        nib: &dyn Nib,
         input_state: &InputState,
         k_image: &mut KusaImage,
     ) -> bool {
@@ -75,7 +74,7 @@ impl Pen {
     fn draw_line(
         &self,
         settings: &Settings,
-        nib: &SquareNib,
+        nib: &dyn Nib,
         k_image: &mut KusaImage,
         input_state: &InputState,
     ) -> bool {

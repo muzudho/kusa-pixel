@@ -4,7 +4,6 @@ pub mod square_nib;
 use crate::data::input_state::InputState;
 use crate::data::pointing::KusaCell;
 use crate::data::pointing::KusaPoint;
-use crate::paint_tool::square_nib::SquareNib;
 use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::Settings;
 use piston_window::*;
@@ -13,7 +12,7 @@ pub trait PaintTool {
     fn on_mouse_pressed(
         &self,
         settings: &Settings,
-        nib: &SquareNib,
+        nib: &dyn Nib,
         input_state: &InputState,
         k_image: &mut KusaImage,
     );
@@ -26,7 +25,7 @@ pub trait PaintTool {
     fn on_mouse_moved(
         &self,
         settings: &Settings,
-        nib: &SquareNib,
+        nib: &dyn Nib,
         input_state: &InputState,
         k_image: &mut KusaImage,
     ) -> bool;
