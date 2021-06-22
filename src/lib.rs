@@ -36,7 +36,14 @@ use std::path::Path;
 
 pub fn run() {
     // 設定ファイルを読み込もうぜ☆（＾～＾）
-    let mut settings = Settings::load();
+    let mut settings = match Settings::load() {
+        Ok(x) => x,
+        Err(_) => {
+            let settings = Settings::default();
+            settings.save();
+            settings
+        }
+    };
 
     println!("Debug   | Load image {}", settings.image_file);
     // Start by loading the image file

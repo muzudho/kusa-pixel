@@ -9,7 +9,7 @@ use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::Settings;
 use piston_window::*;
 
-pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
+pub fn show_window(settings: Settings, k_image: &mut KusaImage) {
     let opengl = OpenGL::V3_2;
 
     let width = settings.canvas_margin_left
@@ -48,8 +48,10 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
             // ミリ秒の取り方が分からなかったぜ☆（＾～＾）
             // イベント・ループの中で　ファイル入出力するのは　クソだが　使い慣れてないんで仕方ないぜ☆（＾～＾）
             // 設定ファイルを監視するぜ☆（＾～＾）
-            settings = Settings::load();
-
+            let settings = match Settings::load() {
+                Ok(x) => x,
+                Err(why) => panic!("Settings load fail: {}", why),
+            };
             paint_tool = match settings.paint_tool.as_str() {
                 "pen" => Pen {},
                 _ => Pen {},
