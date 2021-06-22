@@ -1,9 +1,9 @@
 use crate::data::input_state::InputState;
 use crate::data::pointing::{Pointing, Sizing};
 use crate::grid::Grid;
-use crate::paint_tool::pen::Pen;
+use crate::paint_tool::pen::*;
 use crate::paint_tool::PaintOperation;
-use crate::piston_wrapper::kusa_image::write_k_image;
+use crate::paint_tool::PaintTool;
 use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::Settings;
 use piston_window::*;
@@ -26,6 +26,10 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
     // let texture = create_texture(&settings.image_file, &mut window);
     let mut input_state = InputState::default();
     let mut k_mouse_cursor = Pointing::default();
+    let mut paint_tool = match settings.paint_tool.as_str() {
+        "pen" => Pen {},
+        _ => Pen {},
+    };
 
     let assets = find_folder::Search::ParentsThenKids(3, 3)
         .for_folder("assets")
@@ -44,6 +48,11 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
             // イベント・ループの中で　ファイル入出力するのは　クソだが　使い慣れてないんで仕方ないぜ☆（＾～＾）
             // 設定ファイルを監視するぜ☆（＾～＾）
             settings = Settings::load();
+
+            paint_tool = match settings.paint_tool.as_str() {
+                "pen" => Pen {},
+                _ => Pen {},
+            };
             //println!(
             //    "Trace   | Load settings☆（＾～＾） paint_tool=|{}|",
             //    settings.paint_tool
@@ -65,12 +74,7 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
             input_state.pressed_coord = k_mouse_cursor.clone();
             //println!("Trace   | ボタンが押されたぜ☆（＾～＾） {:?}", pressed_pos);
 
-            match settings.paint_tool.as_str() {
-                "pen" => {
-                    Pen::on_mouse_pressed(&settings, &input_state, k_image);
-                }
-                _ => {}
-            }
+            paint_tool.on_mouse_pressed(&settings, &input_state, k_image);
         }
 
         // TODO ⚡Mouse move
@@ -86,12 +90,8 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
                 //    dx, dy, pressed_pos.x, pressed_pos.y
                 //);
             }
-            match settings.paint_tool.as_str() {
-                "pen" => {
-                    Pen::on_mouse_moved(&settings, &input_state, k_image);
-                }
-                _ => {}
-            }
+
+            paint_tool.on_mouse_moved(&settings, &input_state, k_image);
         }
 
         // ⚡Mouse button released
@@ -99,12 +99,7 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
         if let Some(_button) = e.release_args() {
             //println!("Trace   | ボタンを離したぜ☆（＾～＾）");
             input_state.is_mouse_pressed = false;
-            match settings.paint_tool.as_str() {
-                "pen" => {
-                    Pen::on_mouse_released(&settings, &input_state, k_image);
-                }
-                _ => {}
-            }
+            paint_tool.on_mouse_released(&settings, &input_state, k_image);
         }
 
         // ⚡Window paint

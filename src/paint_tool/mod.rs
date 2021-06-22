@@ -1,8 +1,30 @@
 pub mod pen;
 
+use crate::data::input_state::InputState;
 use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::Settings;
 use piston_window::*;
+
+pub trait PaintTool {
+    fn on_mouse_pressed(
+        &self,
+        settings: &Settings,
+        input_state: &InputState,
+        k_image: &mut KusaImage,
+    );
+    fn on_mouse_released(
+        &self,
+        settings: &Settings,
+        input_state: &InputState,
+        k_image: &mut KusaImage,
+    );
+    fn on_mouse_moved(
+        &self,
+        settings: &Settings,
+        input_state: &InputState,
+        k_image: &mut KusaImage,
+    );
+}
 
 // 画像上の座標
 pub fn coord_on_image(x: f64, y: f64, settings: &Settings) -> Option<(i32, i32)> {

@@ -1,13 +1,15 @@
 use crate::data::input_state::InputState;
 use crate::data::pointing::Pointing;
 use crate::paint_tool::coord_on_image;
+use crate::paint_tool::PaintTool;
 use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::Settings;
 use crate::write_k_image;
 
 pub struct Pen {}
-impl Pen {
-    pub fn on_mouse_pressed(
+impl PaintTool for Pen {
+    fn on_mouse_pressed(
+        &self,
         settings: &Settings,
         input_state: &InputState,
         k_image: &mut KusaImage,
@@ -18,7 +20,12 @@ impl Pen {
         // 保存
         write_k_image(&k_image, &settings.image_file);
     }
-    pub fn on_mouse_moved(settings: &Settings, input_state: &InputState, k_image: &mut KusaImage) {
+    fn on_mouse_moved(
+        &self,
+        settings: &Settings,
+        input_state: &InputState,
+        k_image: &mut KusaImage,
+    ) {
         if input_state.is_mouse_pressed {
             // 点を置きます
             Pen::put_dot(k_image, &input_state.pressed_coord, &settings);
@@ -26,7 +33,8 @@ impl Pen {
             write_k_image(&k_image, &settings.image_file);
         }
     }
-    pub fn on_mouse_released(
+    fn on_mouse_released(
+        &self,
         _settings: &Settings,
         _input_state: &InputState,
         _k_image: &mut KusaImage,
@@ -44,6 +52,8 @@ impl Pen {
         write_k_image(&k_image, &settings.image_file);
         */
     }
+}
+impl Pen {
     // 点を置くぜ（＾～＾）
     fn put_dot(k_image: &mut KusaImage, pointing: &Pointing, settings: &Settings) {
         // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
