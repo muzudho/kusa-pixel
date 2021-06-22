@@ -67,11 +67,7 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
 
             match settings.paint_tool.as_str() {
                 "pen" => {
-                    // 点を置きます
-                    Pen::put_dot(k_image, &input_state.pressed_coord, &settings);
-
-                    // 保存
-                    write_k_image(&k_image, &settings.image_file);
+                    Pen::on_mouse_pressed(&settings, &input_state, k_image);
                 }
                 _ => {}
             }
@@ -92,12 +88,7 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
             }
             match settings.paint_tool.as_str() {
                 "pen" => {
-                    if input_state.is_mouse_pressed {
-                        // 点を置きます
-                        Pen::put_dot(k_image, &input_state.pressed_coord, &settings);
-                        // 保存
-                        write_k_image(&k_image, &settings.image_file);
-                    }
+                    Pen::on_mouse_moved(&settings, &input_state, k_image);
                 }
                 _ => {}
             }
@@ -110,18 +101,7 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
             input_state.is_mouse_pressed = false;
             match settings.paint_tool.as_str() {
                 "pen" => {
-                    /*
-                    let sizing = Sizing::diff(&k_mouse_cursor, &pressed_pos);
-
-                    // 線を引きます。
-                    Pen::draw_line(k_image, &pressed_pos, &sizing);
-
-                    //println!(
-                    //    "Trace   | Click ({}, {}) 保存",
-                    //    &k_mouse_cursor.x, &k_mouse_cursor.y
-                    //);
-                    write_k_image(&k_image, &settings.image_file);
-                    */
+                    Pen::on_mouse_released(&settings, &input_state, k_image);
                 }
                 _ => {}
             }
