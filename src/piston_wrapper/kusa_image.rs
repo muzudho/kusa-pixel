@@ -5,11 +5,13 @@ use std::path::Path;
 //use image::{save_buffer, ColorType};
 // use piston_window::{Flip, G2dTexture, PistonWindow, Texture, TextureSettings};
 
-// This is a wrapped version of Piston's image library
+/// This is a wrapped version of Piston's image library
 pub struct KusaImage {
     pub k_colors: Vec<KusaColor>,
     pub width: u32,
     pub height: u32,
+    // 画像の更新があれば真
+    pub dirty: bool,
 }
 impl KusaImage {
     pub fn new(width: u32, height: u32) -> Self {
@@ -17,6 +19,7 @@ impl KusaImage {
             k_colors: vec![KusaColor::default(); (width * height) as usize],
             width: width,
             height: height,
+            dirty: false,
         }
     }
 
@@ -79,6 +82,7 @@ impl KusaImage {
     }
 }
 
+/// 画像の保存
 pub fn write_k_image(k_image: &KusaImage, path: &str) {
     save_buffer(
         &Path::new(path),

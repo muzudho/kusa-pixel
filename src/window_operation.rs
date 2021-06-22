@@ -10,6 +10,7 @@ use crate::paint_tool::PaintOperation;
 use crate::paint_tool::PaintTool;
 use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::Settings;
+use crate::write_k_image;
 use crate::KusaApp;
 use piston_window::*;
 
@@ -202,6 +203,11 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
                         g,
                     )
                     .unwrap();
+            }
+
+            if k_image.dirty {
+                // 保存
+                write_k_image(&k_image, &settings.image_file);
             }
 
             // Update glyphs before rendering.

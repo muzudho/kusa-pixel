@@ -6,7 +6,6 @@ use crate::paint_tool::Nib;
 use crate::paint_tool::PaintTool;
 use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::Settings;
-use crate::write_k_image;
 
 pub struct Pen {}
 impl PaintTool for Pen {
@@ -21,8 +20,7 @@ impl PaintTool for Pen {
             // 点を置きます
             nib.put_pixel(&settings, k_image, &center);
 
-            // 保存
-            write_k_image(&k_image, &settings.image_file);
+            k_image.dirty = true;
         }
     }
     fn on_mouse_moved(
@@ -41,9 +39,7 @@ impl PaintTool for Pen {
             //    "Trace   | Click ({}, {}) 保存",
             //    &k_mouse_cursor.x, &k_mouse_cursor.y
             //);
-            write_k_image(&k_image, &settings.image_file);
-            // 保存
-            write_k_image(&k_image, &settings.image_file);
+            k_image.dirty = true;
             return true;
         }
         return false;
