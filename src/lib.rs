@@ -35,8 +35,11 @@ use crate::window_operation::*;
 use std::path::Path;
 
 pub fn run() {
+    // 構成（＾～＾）
+    let conf = KusaConf::default();
+
     // 設定ファイルを読み込もうぜ☆（＾～＾）
-    let mut settings = match Settings::load() {
+    let mut settings = match Settings::load(&conf.settings_path) {
         Ok(x) => x,
         Err(_) => {
             let settings = Settings::default();
@@ -63,5 +66,16 @@ pub fn run() {
         }
     };
 
-    show_window(settings, &mut k_image);
+    show_window(&conf, settings, &mut k_image);
+}
+
+pub struct KusaConf {
+    settings_path: String,
+}
+impl Default for KusaConf {
+    fn default() -> Self {
+        KusaConf {
+            settings_path: "settings.json".to_string(),
+        }
+    }
 }

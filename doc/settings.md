@@ -89,3 +89,11 @@ settings.json:
 ```
 
 👆 Colors to be painted, 0-255. r is red, g is green, b is blue. rgb is 0 for black. a is 255 for opaque
+
+```json
+{
+    "paint_thickness": 2.0
+}
+```
+
+👆 Line thickness

@@ -64,8 +64,8 @@ impl Default for Settings {
 }
 impl Settings {
     /// 設定ファイル読込
-    pub fn load() -> Result<Self, String> {
-        let path = Path::new("./settings.json");
+    pub fn load(settings_path: &str) -> Result<Self, String> {
+        let path = Path::new(settings_path);
 
         let mut file = match File::open(path) {
             Ok(x) => x,
