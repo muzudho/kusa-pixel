@@ -80,9 +80,13 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
         // TODO ⚡Mouse move
         // 📖 [MouseRelativeEvent](https://docs.piston.rs/piston_window/piston_window/trait.MouseRelativeEvent.html)
         if let Some(coord) = e.mouse_relative_args() {
+            let dx = coord[0];
+            let dy = coord[1];
+
+            paint_tool.on_mouse_moved(&settings, &input_state, k_image, dx, dy);
+
+            // イベントハンドラを呼び出したあとで更新
             if input_state.is_mouse_pressed {
-                let dx = coord[0];
-                let dy = coord[1];
                 input_state.pressed_coord.x += dx;
                 input_state.pressed_coord.y += dy;
                 //println!(
@@ -90,8 +94,6 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
                 //    dx, dy, pressed_pos.x, pressed_pos.y
                 //);
             }
-
-            paint_tool.on_mouse_moved(&settings, &input_state, k_image);
         }
 
         // ⚡Mouse button released

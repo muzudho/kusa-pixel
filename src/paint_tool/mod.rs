@@ -23,20 +23,52 @@ pub trait PaintTool {
         settings: &Settings,
         input_state: &InputState,
         k_image: &mut KusaImage,
+        dx: f64,
+        dy: f64,
     );
 }
 
-// 画像上の座標
-pub fn coord_on_image(x: f64, y: f64, settings: &Settings) -> Option<(i32, i32)> {
-    let xx = (x - settings.canvas_margin_left) / settings.canvas_dot_width;
-    let yy = (y - settings.canvas_margin_top) / settings.canvas_dot_height;
+/// # Arguments
+///
+/// * `sc_x` - スクリーン座標
+/// * `sc_y` - スクリーン座標
+///
+/// # Returns
+///
+/// 画像上の座標
+pub fn coord_on_image(sc_x: f64, sc_y: f64, settings: &Settings) -> Option<(i32, i32)> {
+    // 画像上の座標
+    let im_x = (sc_x - settings.canvas_margin_left) / settings.canvas_dot_width;
+    let im_y = (sc_y - settings.canvas_margin_top) / settings.canvas_dot_height;
 
-    if 0.0 <= xx
-        && xx < settings.image_width as f64
-        && 0.0 <= yy
-        && yy < settings.image_height as f64
+    if 0.0 <= im_x
+        && im_x < settings.image_width as f64
+        && 0.0 <= im_y
+        && im_y < settings.image_height as f64
     {
-        return Some((xx as i32, yy as i32));
+        return Some((im_x as i32, im_y as i32));
+    } else {
+        return None;
+    }
+}
+
+pub fn x_on_image(sc_x: f64, sc_y: f64, settings: &Settings) -> Option<i32> {
+    // 画像上の座標
+    let im_x = (sc_x - settings.canvas_margin_left) / settings.canvas_dot_width;
+
+    if 0.0 <= im_x && im_x < settings.image_width as f64 {
+        return Some(im_x as i32);
+    } else {
+        return None;
+    }
+}
+
+pub fn y_on_image(sc_x: f64, sc_y: f64, settings: &Settings) -> Option<i32> {
+    // 画像上の座標
+    let im_y = (sc_y - settings.canvas_margin_top) / settings.canvas_dot_height;
+
+    if 0.0 <= im_y && im_y < settings.image_height as f64 {
+        return Some(im_y as i32);
     } else {
         return None;
     }

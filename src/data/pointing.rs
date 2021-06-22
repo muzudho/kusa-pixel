@@ -40,10 +40,10 @@ impl Sizing {
     }
 
     /*
-    pub fn diff(cursor: &Pointing, pressed_pos: &Pointing, settings: &Settings) -> Self {
+    pub fn diff(settings: &Settings, moved_point: &Pointing, pressed_coord: &Pointing) -> Self {
         let sizing = Sizing {
-            width: cursor.x - pressed_pos.x,
-            height: cursor.y - pressed_pos.y,
+            width: moved_point.x - pressed_coord.x,
+            height: moved_point.y - pressed_coord.y,
         };
         //println!(
         //    "Trace   | diff cursor={:?} pressed_pos={:?} sizing={:?} long_edge_sign={} long_edge_cell_abs={}",
@@ -55,6 +55,7 @@ impl Sizing {
         //);
         sizing
     }
+    */
 
     pub fn is_longer_edge_abs(&self) -> bool {
         self.height.abs() < self.width.abs()
@@ -84,7 +85,6 @@ impl Sizing {
             self.height / self.height.abs()
         }
     }
-    */
 
     /*
     pub fn long_edge_pixels_abs(&self) -> usize {
