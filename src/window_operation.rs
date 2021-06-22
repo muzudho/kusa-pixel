@@ -10,7 +10,7 @@ use crate::settings::Settings;
 use crate::KusaApp;
 use piston_window::*;
 
-pub fn show_window(app: &KusaApp, settings: Settings, k_image: &mut KusaImage) {
+pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImage) {
     let opengl = OpenGL::V3_2;
 
     let width = settings.canvas_margin_left
@@ -52,7 +52,7 @@ pub fn show_window(app: &KusaApp, settings: Settings, k_image: &mut KusaImage) {
             // イベント・ループの中で　ファイル入出力するのは　クソだが　使い慣れてないんで仕方ないぜ☆（＾～＾）
             // 設定ファイルを監視するぜ☆（＾～＾）
             println!("Debug   | Reload settings");
-            let settings = match Settings::load(&app.settings_path) {
+            settings = match Settings::load(&app.settings_path) {
                 Ok(x) => x,
                 Err(why) => panic!("Settings load fail: {}", why),
             };
