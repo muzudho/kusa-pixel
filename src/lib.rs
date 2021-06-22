@@ -38,7 +38,7 @@ pub fn run() {
     // 設定ファイルを読み込もうぜ☆（＾～＾）
     let mut settings = Settings::load();
 
-    println!("Trace   | Load image {}", settings.image_file);
+    println!("Debug   | Load image {}", settings.image_file);
     // Start by loading the image file
     let mut k_image = match image::open(Path::new(&settings.image_file)) {
         Ok(img) => {

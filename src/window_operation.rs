@@ -2,6 +2,7 @@ use crate::data::input_state::InputState;
 use crate::data::pointing::{KusaPoint, KusaSize};
 use crate::grid::Grid;
 use crate::paint_tool::pen::*;
+use crate::paint_tool::screen_to_image;
 use crate::paint_tool::PaintOperation;
 use crate::paint_tool::PaintTool;
 use crate::piston_wrapper::kusa_image::KusaImage;
@@ -180,15 +181,17 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
             Grid::draw(&settings, &canvas_size, &c, g);
 
             // TODO 座標を表示したいぜ☆（＾～＾）
-            text::Text::new_color([0.0, 0.0, 0.0, 1.0], 32)
-                .draw(
-                    &format!("xy({:.0}, {:.0})", k_mouse_cursor.x, k_mouse_cursor.y),
-                    &mut glyphs,
-                    &c.draw_state,
-                    c.transform.trans(10.0, 30.0), // y位置を揃えるのはむずかしいぜ☆（＾～＾）
-                    g,
-                )
-                .unwrap();
+            if let Some(coord) = screen_to_image(&settings, &k_mouse_cursor) {
+                text::Text::new_color([0.0, 0.0, 0.0, 1.0], 32)
+                    .draw(
+                        &format!("xy({}, {})", coord.x, coord.y),
+                        &mut glyphs,
+                        &c.draw_state,
+                        c.transform.trans(10.0, 30.0), // y位置を揃えるのはむずかしいぜ☆（＾～＾）
+                        g,
+                    )
+                    .unwrap();
+            }
 
             // Update glyphs before rendering.
             glyphs.factory.encoder.flush(device);
