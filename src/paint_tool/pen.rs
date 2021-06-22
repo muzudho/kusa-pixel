@@ -1,4 +1,5 @@
 use crate::data::input_state::InputState;
+use crate::data::pointing::KusaCell;
 use crate::data::pointing::KusaPoint;
 use crate::paint_tool::screen_to_image;
 use crate::paint_tool::PaintTool;
@@ -57,104 +58,74 @@ impl Pen {
 
     // 線を引くぜ（＾～＾）
     fn draw_line(&self, settings: &Settings, k_image: &mut KusaImage, input_state: &InputState) {
-        if let Some(pressed_im_coord) = screen_to_image(
+        // 画像上のピクセル位置
+        if let Some(previous_cell) = screen_to_image(
             input_state.previous_point.x,
             input_state.previous_point.y,
             settings,
         ) {
-            // println!(
-            //     "Trace   | pressed_im_coord 0={} 1={}",
-            //     pressed_im_coord.0, pressed_im_coord.1
-            // );
-
-            // // 1未満は 1に切り上げます。-1未満は-1に切り上げます
-            // if 0.0 < sc_dx && sc_dx < 1.0 {
-            //     sc_dx = 1.0;
-            // } else if -1.0 < sc_dx && sc_dx < 0.0 {
-            //     sc_dx = -1.0;
-            // }
-            // if 0.0 < sc_dy && sc_dy < 1.0 {
-            //     sc_dy = 1.0;
-            // } else if -1.0 < sc_dy && sc_dy < 0.0 {
-            //     sc_dy = -1.0;
-            // }
-            // //println!("Trace   | sc_dx={} sc_dy={}", sc_dx, sc_dy);
-
-            // 画像上のピクセル位置
-            let start_cell = KusaPoint {
-                x: input_state.previous_point.x / settings.canvas_dot_width,
-                y: input_state.previous_point.y / settings.canvas_dot_height,
-            };
-            let end_cell = KusaPoint {
-                x: (input_state.previous_point.x + input_state.moved_vector.x)
-                    / settings.canvas_dot_width,
-                y: (input_state.previous_point.y + input_state.moved_vector.y)
-                    / settings.canvas_dot_height,
-            };
-
-            // 画像上のピクセル数を返します
-            let im_dx = end_cell.x - start_cell.x;
-            let im_dy = end_cell.y - start_cell.y;
-            // ずっと |1|未満 だと何も描かれないので、
-            // 1未満は 1に切り上げます。-1未満は-1に切り上げます
-            let im_dx_len = {
-                let mut im_width = im_dx.abs();
-                if 0.0 < im_width && im_width < 1.0 {
-                    im_width = 1.0;
-                } else if -1.0 < im_width && im_width < 0.0 {
-                    im_width = -1.0;
-                }
-                im_width
-            };
-            let im_dy_len = {
-                let mut im_height = im_dy.abs();
-                if 0.0 < im_height && im_height < 1.0 {
-                    im_height = 1.0;
-                } else if -1.0 < im_height && im_height < 0.0 {
-                    im_height = -1.0;
-                }
-                im_height
-            };
-            //println!("Trace   | sc_dx={} sc_dy={}", sc_dx, sc_dy);
+            println!(
+                "Trace   | previous_cell=({} {})",
+                previous_cell.0, previous_cell.1
+            );
 
             // 横長
-            let im_landscape = im_dy_len < im_dx_len;
+            let landscape = input_state.moved_vector.y.abs() < input_state.moved_vector.x.abs();
+            println!("Trace   | landscape={}", landscape);
+
+            let end_cell = KusaCell {
+                x: ((input_state.previous_point.x + input_state.moved_vector.x)
+                    / settings.canvas_dot_width) as i32,
+                y: ((input_state.previous_point.y + input_state.moved_vector.y)
+                    / settings.canvas_dot_height) as i32,
+            };
+
+            println!("Trace   | end_cell=({} {})", end_cell.x, end_cell.y);
+
+            // 画像上のピクセル数を返します
+            let dx = end_cell.x - previous_cell.0;
+            let dy = end_cell.y - previous_cell.1;
+            // ずっと |1|未満 だと何も描かれないので、
+            // 1未満は 1に切り上げます。-1未満は-1に切り上げます
+            let dx_len = dx.abs();
+            let dy_len = dy.abs();
+
             // 長い方の辺の正負を返します。 1 or -1
-            let im_long_edge_sign = if im_landscape {
-                if im_dx.is_sign_positive() {
+            let long_edge_sign = if landscape {
+                if 0 <= dx {
                     1
                 } else {
                     -1
                 }
             } else {
-                if im_dy.is_sign_positive() {
+                if 0 <= dy {
                     1
                 } else {
                     -1
                 }
             };
             // 短い方の辺の比を返します
-            let im_short_edge_rate = if im_landscape {
-                if 0.0 < im_dx_len {
-                    im_dy_len / im_dx_len
+            let short_edge_rate = if landscape {
+                if 0 < dx_len {
+                    dy_len as f64 / dx_len as f64
                 } else {
                     0.0
                 }
             } else {
-                if 0.0 < im_dy_len {
-                    im_dx_len / im_dy_len
+                if 0 < dy_len {
+                    dx_len as f64 / dy_len as f64
                 } else {
                     0.0
                 }
             };
-            if im_landscape {
+            if landscape {
                 // 横幅の方が長ければ。
-                let draw_horizontal = &mut |im_d_col| {
-                    let im_d_row = (im_short_edge_rate * im_d_col as f64) as i32;
+                let draw_horizontal = &mut |interpolation_x| {
+                    let interpolation_y = (short_edge_rate * interpolation_x as f64) as i32;
                     // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
-                    let im_x = pressed_im_coord.0 + im_d_col;
-                    let im_y = pressed_im_coord.1 + im_d_row;
-                    println!("Trace   | 右へ（＾～＾） im_x={} im_y={}", im_x, im_y);
+                    let im_x = previous_cell.0 + interpolation_x;
+                    let im_y = previous_cell.1 + interpolation_y;
+                    //println!("Trace   | 右へ（＾～＾） im_x={} im_y={}", im_x, im_y);
                     if 0 <= im_x
                         && im_x < settings.image_width as i32
                         && 0 <= im_y
@@ -163,29 +134,29 @@ impl Pen {
                         k_image.set_pixel(im_x as u32, im_y as u32, &settings.paint_color);
                     }
                 };
-                if 0 <= im_long_edge_sign {
-                    println!("Trace   | 右へ☆（＾～＾） im_dx_len={}", im_dx_len);
-                    for im_d_col in 1..(im_dx_len as i32 + 1) {
-                        draw_horizontal(im_d_col);
+                if 0 <= long_edge_sign {
+                    println!("Trace   | 右へ☆（＾～＾） dx_len={}", dx_len);
+                    for x in 1..(dx_len as i32 + 1) {
+                        draw_horizontal(x);
                     }
                 } else {
-                    //println!("Trace   | 左へ☆（＾～＾）");
-                    for im_d_col in (1..(im_dx_len as i32 + 1)).rev() {
-                        draw_horizontal(im_long_edge_sign * im_d_col);
+                    println!("Trace   | 左へ☆（＾～＾）");
+                    for x in (1..(dx_len as i32 + 1)).rev() {
+                        draw_horizontal(long_edge_sign * x);
                     }
                 }
             } else {
                 // 縦幅の方が長いか同じなら。
-                let draw_vertical = &mut |im_d_row| {
+                let draw_vertical = &mut |interpolation_y| {
                     println!(
-                        "Trace   | im_short_edge_rate={} im_d_row={}",
-                        im_short_edge_rate, im_d_row
+                        "Trace   | short_edge_rate={} interpolation_y={}",
+                        short_edge_rate, interpolation_y
                     );
-                    let im_d_col = (im_short_edge_rate * im_d_row as f64) as i32;
-                    println!("Trace   | im_d_col={}", im_d_col,);
+                    let interpolation_x = (short_edge_rate * interpolation_y as f64) as i32;
+                    println!("Trace   | interpolation_x={}", interpolation_x,);
                     // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
-                    let im_x = pressed_im_coord.0 + im_d_col;
-                    let im_y = pressed_im_coord.1 + im_d_row;
+                    let im_x = previous_cell.0 + interpolation_x;
+                    let im_y = previous_cell.1 + interpolation_y;
                     println!("Trace   | im_x={} im_y={}", im_x, im_y);
                     if 0 <= im_x
                         && im_x < settings.image_width as i32
@@ -195,15 +166,15 @@ impl Pen {
                         k_image.set_pixel(im_x as u32, im_y as u32, &settings.paint_color);
                     }
                 };
-                if 0 <= im_long_edge_sign {
-                    //println!("Trace   | 下へ☆（＾～＾）");
-                    for im_d_row in 1..(im_dy_len as i32 + 1) {
-                        draw_vertical(im_d_row);
+                if 0 <= long_edge_sign {
+                    println!("Trace   | 下へ☆（＾～＾）");
+                    for y in 1..(dy_len as i32 + 1) {
+                        draw_vertical(y);
                     }
                 } else {
-                    //println!("Trace   | 上へ☆（＾～＾）");
-                    for im_d_row in (1..(im_dy_len as i32 + 1)).rev() {
-                        draw_vertical(im_long_edge_sign * im_d_row);
+                    println!("Trace   | 上へ☆（＾～＾）");
+                    for y in (1..(dy_len as i32 + 1)).rev() {
+                        draw_vertical(long_edge_sign * y);
                     }
                 }
             }

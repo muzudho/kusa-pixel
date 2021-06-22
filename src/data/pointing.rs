@@ -1,6 +1,30 @@
 use std::fmt;
 
 #[derive(Clone, Copy)]
+pub struct KusaCell {
+    pub x: i32,
+    pub y: i32,
+}
+impl Default for KusaCell {
+    fn default() -> Self {
+        KusaCell { x: 0, y: 0 }
+    }
+}
+impl KusaCell {
+    pub fn from_coord(coord: [i32; 2]) -> Self {
+        KusaCell {
+            x: coord[0],
+            y: coord[1],
+        }
+    }
+}
+impl fmt::Debug for KusaCell {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "cell=({}, {})", self.x, self.y)
+    }
+}
+
+#[derive(Clone, Copy)]
 pub struct KusaPoint {
     pub x: f64,
     pub y: f64,
@@ -11,10 +35,10 @@ impl Default for KusaPoint {
     }
 }
 impl KusaPoint {
-    pub fn from_pos(pos: [f64; 2]) -> Self {
+    pub fn from_coord(coord: [f64; 2]) -> Self {
         KusaPoint {
-            x: pos[0],
-            y: pos[1],
+            x: coord[0],
+            y: coord[1],
         }
     }
 }

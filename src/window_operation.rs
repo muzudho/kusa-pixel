@@ -62,8 +62,8 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
             count_to_reload += 1;
         }
         // マウスカーソルの座標を補足するぜ☆（＾～＾）
-        e.mouse_cursor(|pos| {
-            k_mouse_cursor = KusaPoint::from_pos(pos);
+        e.mouse_cursor(|coord| {
+            k_mouse_cursor = KusaPoint::from_coord(coord);
         });
 
         // 📖 [Event](http://docs.piston.rs/piston_window/piston_window/enum.Event.html)
