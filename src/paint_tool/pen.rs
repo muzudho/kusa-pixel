@@ -1,6 +1,6 @@
 use crate::data::input_state::InputState;
-use crate::data::pointing::Pointing;
-use crate::paint_tool::coord_on_image;
+use crate::data::pointing::KusaPoint;
+use crate::paint_tool::screen_to_image;
 use crate::paint_tool::PaintTool;
 use crate::piston_wrapper::kusa_image::KusaImage;
 use crate::settings::Settings;
@@ -50,9 +50,9 @@ impl PaintTool for Pen {
 }
 impl Pen {
     // 点を置くぜ（＾～＾）
-    fn put_pixel(k_image: &mut KusaImage, pointing: &Pointing, settings: &Settings) {
+    fn put_pixel(k_image: &mut KusaImage, sc_coord: &KusaPoint, settings: &Settings) {
         // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
-        if let Some(coord) = coord_on_image(pointing.x, pointing.y, settings) {
+        if let Some(coord) = screen_to_image(sc_coord.x, sc_coord.y, settings) {
             k_image.set_pixel(coord.0 as u32, coord.1 as u32, &settings.paint_color);
         }
     }
@@ -61,28 +61,60 @@ impl Pen {
     //
     // # Arguments
     //
+    // * `src_sc_coord` - マウスクリックしたスクリーン座標
     // * `sc_dx` - スクリーン上の差分x
     // * `sc_dy` - スクリーン上の差分y
     fn draw_line(
         settings: &Settings,
         k_image: &mut KusaImage,
-        pressed_sc_coord: &Pointing,
+        src_sc_coord: &KusaPoint,
         sc_dx: f64,
         sc_dy: f64,
     ) {
-        if let Some(pressed_im_coord) =
-            coord_on_image(pressed_sc_coord.x, pressed_sc_coord.y, settings)
-        {
-            println!(
-                "Trace   | pressed_im_coord.0={} pressed_im_coord.1={}",
-                pressed_im_coord.0, pressed_im_coord.1
-            );
+        if let Some(pressed_im_coord) = screen_to_image(src_sc_coord.x, src_sc_coord.y, settings) {
+            // println!(
+            //     "Trace   | pressed_im_coord 0={} 1={}",
+            //     pressed_im_coord.0, pressed_im_coord.1
+            // );
+
+            // // 1未満は 1に切り上げます。-1未満は-1に切り上げます
+            // if 0.0 < sc_dx && sc_dx < 1.0 {
+            //     sc_dx = 1.0;
+            // } else if -1.0 < sc_dx && sc_dx < 0.0 {
+            //     sc_dx = -1.0;
+            // }
+            // if 0.0 < sc_dy && sc_dy < 1.0 {
+            //     sc_dy = 1.0;
+            // } else if -1.0 < sc_dy && sc_dy < 0.0 {
+            //     sc_dy = -1.0;
+            // }
+            // //println!("Trace   | sc_dx={} sc_dy={}", sc_dx, sc_dy);
 
             // 画像上のピクセル数を返します
             let im_d_width = sc_dx / settings.canvas_dot_width;
-            let im_width = im_d_width.abs();
             let im_d_height = sc_dy / settings.canvas_dot_height;
-            let im_height = im_d_height.abs();
+            // ずっと |1|未満 だと何も描かれないので、
+            // 1未満は 1に切り上げます。-1未満は-1に切り上げます
+            let im_width = {
+                let mut im_width = im_d_width.abs();
+                if 0.0 < im_width && im_width < 1.0 {
+                    im_width = 1.0;
+                } else if -1.0 < im_width && im_width < 0.0 {
+                    im_width = -1.0;
+                }
+                im_width
+            };
+            let im_height = {
+                let mut im_height = im_d_height.abs();
+                if 0.0 < im_height && im_height < 1.0 {
+                    im_height = 1.0;
+                } else if -1.0 < im_height && im_height < 0.0 {
+                    im_height = -1.0;
+                }
+                im_height
+            };
+            //println!("Trace   | sc_dx={} sc_dy={}", sc_dx, sc_dy);
+
             // 横長
             let im_landscape = im_height < im_width;
             // 長い方の辺の正負を返します。 1 or -1
@@ -120,6 +152,7 @@ impl Pen {
                     // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
                     let im_x = pressed_im_coord.0 + im_d_col;
                     let im_y = pressed_im_coord.1 + im_d_row;
+                    println!("Trace   | 右へ（＾～＾） im_x={} im_y={}", im_x, im_y);
                     if 0 <= im_x
                         && im_x < settings.image_width as i32
                         && 0 <= im_y
@@ -129,12 +162,12 @@ impl Pen {
                     }
                 };
                 if 0 <= im_long_edge_sign {
-                    //println!("Trace   | 左へ☆（＾～＾）");
+                    println!("Trace   | 右へ☆（＾～＾） im_width={}", im_width);
                     for im_d_col in 1..(im_width as i32 + 1) {
                         draw_horizontal(im_d_col);
                     }
                 } else {
-                    //println!("Trace   | 右へ☆（＾～＾）");
+                    //println!("Trace   | 左へ☆（＾～＾）");
                     for im_d_col in (1..(im_width as i32 + 1)).rev() {
                         draw_horizontal(im_long_edge_sign * im_d_col);
                     }

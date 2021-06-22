@@ -36,7 +36,7 @@ pub trait PaintTool {
 /// # Returns
 ///
 /// 画像上の座標
-pub fn coord_on_image(sc_x: f64, sc_y: f64, settings: &Settings) -> Option<(i32, i32)> {
+pub fn screen_to_image(sc_x: f64, sc_y: f64, settings: &Settings) -> Option<(i32, i32)> {
     // 画像上の座標
     let im_x = (sc_x - settings.canvas_margin_left) / settings.canvas_dot_width;
     let im_y = (sc_y - settings.canvas_margin_top) / settings.canvas_dot_height;

@@ -1,5 +1,5 @@
 use crate::data::input_state::InputState;
-use crate::data::pointing::{KusaSize, Pointing};
+use crate::data::pointing::{KusaPoint, KusaSize};
 use crate::grid::Grid;
 use crate::paint_tool::pen::*;
 use crate::paint_tool::PaintOperation;
@@ -25,7 +25,7 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
 
     // let texture = create_texture(&settings.image_file, &mut window);
     let mut input_state = InputState::default();
-    let mut k_mouse_cursor = Pointing::default();
+    let mut k_mouse_cursor = KusaPoint::default();
     let mut paint_tool = match settings.paint_tool.as_str() {
         "pen" => Pen {},
         _ => Pen {},
@@ -63,7 +63,7 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
         }
         // マウスカーソルの座標を補足するぜ☆（＾～＾）
         e.mouse_cursor(|pos| {
-            k_mouse_cursor = Pointing::from_pos(pos);
+            k_mouse_cursor = KusaPoint::from_pos(pos);
         });
 
         // 📖 [Event](http://docs.piston.rs/piston_window/piston_window/enum.Event.html)

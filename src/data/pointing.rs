@@ -1,27 +1,26 @@
 use std::fmt;
 
 #[derive(Clone, Copy)]
-pub struct Pointing {
-    // Screen coordinate
+pub struct KusaPoint {
     pub x: f64,
     pub y: f64,
 }
-impl Default for Pointing {
+impl Default for KusaPoint {
     fn default() -> Self {
-        Pointing { x: 0.0, y: 0.0 }
+        KusaPoint { x: 0.0, y: 0.0 }
     }
 }
-impl Pointing {
+impl KusaPoint {
     pub fn from_pos(pos: [f64; 2]) -> Self {
-        Pointing {
+        KusaPoint {
             x: pos[0],
             y: pos[1],
         }
     }
 }
-impl fmt::Debug for Pointing {
+impl fmt::Debug for KusaPoint {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "pos=({}, {})", self.x, self.y)
+        write!(f, "point=({}, {})", self.x, self.y)
     }
 }
 
@@ -32,7 +31,7 @@ pub struct KusaSize {
 }
 impl KusaSize {
     /*
-    pub fn diff(settings: &Settings, moved_point: &Pointing, pressed_coord: &Pointing) -> Self {
+    pub fn diff(settings: &Settings, moved_point: &KusaPoint, pressed_coord: &KusaPoint) -> Self {
         let sizing = KusaSize {
             width: moved_point.x - pressed_coord.x,
             height: moved_point.y - pressed_coord.y,
