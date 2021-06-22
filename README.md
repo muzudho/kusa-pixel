@@ -55,6 +55,9 @@ fn main() {
 
 👆 Drag the mouse from where you clicked to where you passed  
 
+### Save & Reload
+
+There is no timer. When you move the mouse over the window, the image is automatically saved and the settings are automatically loaded.  
 ## Documents
 
 [Settings](./doc/settings.md)  

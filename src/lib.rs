@@ -60,8 +60,8 @@ pub fn run() {
         }
         Err(_e) => {
             // If there is no image file, create a new one with the size specified in the configuration file
-            let k_image = KusaImage::new(settings.image_width, settings.image_height);
-            write_k_image(&k_image, &settings.image_file);
+            let mut k_image = KusaImage::new(settings.image_width, settings.image_height);
+            write_k_image(&mut k_image, &settings.image_file);
             k_image
         }
     };

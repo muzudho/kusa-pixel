@@ -83,7 +83,7 @@ impl KusaImage {
 }
 
 /// 画像の保存
-pub fn write_k_image(k_image: &KusaImage, path: &str) {
+pub fn write_k_image(k_image: &mut KusaImage, path: &str) {
     save_buffer(
         &Path::new(path),
         &k_image.to_rgba_vec(),
@@ -92,6 +92,7 @@ pub fn write_k_image(k_image: &KusaImage, path: &str) {
         ColorType::Rgba8,
     )
     .unwrap();
+    k_image.dirty = false;
 }
 
 /*

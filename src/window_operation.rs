@@ -48,6 +48,7 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
         .unwrap();
 
     let mut count_to_reload: u64 = 0;
+    let mut count_to_save: u64 = 0;
     // Event loop.
     window.set_lazy(true);
     // フレームではなく、イベントが起こると１つ進む（＾～＾）？
@@ -192,22 +193,35 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
             };
             Grid::draw(&settings, &canvas_size, &c, g);
 
-            // TODO 座標を表示したいぜ☆（＾～＾）
-            if let Some(coord) = screen_to_image(&settings, &k_mouse_cursor) {
+            if k_image.dirty && count_to_save % 128 == 0 {
+                // 保存
+                write_k_image(k_image, &settings.image_file);
+                count_to_save = 0;
+            } else {
+                count_to_save += 1;
+            }
+
+            // 情報表示（＾～＾）
+            {
+                let mut info_str = "".to_string();
+                // 画像の保存がまだなら表示（＾～＾）
+                if k_image.dirty {
+                    info_str += "Unsaved ";
+                }
+                // 座標を表示したいぜ☆（＾～＾）
+                if let Some(coord) = screen_to_image(&settings, &k_mouse_cursor) {
+                    info_str += &format!("xy({}, {}) ", coord.x, coord.y);
+                }
+                // 表示（＾～＾）
                 text::Text::new_color([0.0, 0.0, 0.0, 1.0], 32)
                     .draw(
-                        &format!("xy({}, {})", coord.x, coord.y),
+                        &info_str,
                         &mut glyphs,
                         &c.draw_state,
                         c.transform.trans(10.0, 30.0), // y位置を揃えるのはむずかしいぜ☆（＾～＾）
                         g,
                     )
                     .unwrap();
-            }
-
-            if k_image.dirty {
-                // 保存
-                write_k_image(&k_image, &settings.image_file);
             }
 
             // Update glyphs before rendering.
