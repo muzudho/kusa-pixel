@@ -36,10 +36,10 @@ use std::path::Path;
 
 pub fn run() {
     // 構成（＾～＾）
-    let conf = KusaConf::default();
+    let app = KusaApp::default();
 
     // 設定ファイルを読み込もうぜ☆（＾～＾）
-    let mut settings = match Settings::load(&conf.settings_path) {
+    let mut settings = match Settings::load(&app.settings_path) {
         Ok(x) => x,
         Err(_) => {
             let settings = Settings::default();
@@ -66,15 +66,15 @@ pub fn run() {
         }
     };
 
-    show_window(&conf, settings, &mut k_image);
+    show_window(&app, settings, &mut k_image);
 }
 
-pub struct KusaConf {
+pub struct KusaApp {
     settings_path: String,
 }
-impl Default for KusaConf {
+impl Default for KusaApp {
     fn default() -> Self {
-        KusaConf {
+        KusaApp {
             settings_path: "settings.json".to_string(),
         }
     }

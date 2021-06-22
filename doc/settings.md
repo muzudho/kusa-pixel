@@ -1,6 +1,6 @@
 # Settings
 
-This settings file is read every second.  
+毎秒更新したかったがやり方が分からなかったので、ウィンドウ上でマウスを動かし続けると 更新される仕組みに（＾～＾）  
 
 settings.json:  
 
