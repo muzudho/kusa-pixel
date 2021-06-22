@@ -12,6 +12,7 @@ impl Nib for SquareNib {
         let radius = settings.paint_thickness / 2.0;
 
         let left = {
+            // 四捨五入
             let mut left = (center.x - radius).round() as i16;
             if left < 0 {
                 left = 0;

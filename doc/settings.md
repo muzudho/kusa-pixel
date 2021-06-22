@@ -78,6 +78,12 @@ settings.json:
 
 👆 Now it's just a pen. Draw a point  
 
+* paint_tool
+  * "Pen"
+* paint_nib
+  * "Square"
+  * "Circle"
+
 ```json
 {
     "paint_color": {
