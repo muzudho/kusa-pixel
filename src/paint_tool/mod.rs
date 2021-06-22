@@ -1,4 +1,5 @@
 pub mod pen;
+pub mod square_pen_nibs;
 
 use crate::data::input_state::InputState;
 use crate::data::pointing::KusaCell;
@@ -49,6 +50,29 @@ pub fn screen_to_image(settings: &Settings, sc_coord: &KusaPoint) -> Option<Kusa
             x: im_x as i32,
             y: im_y as i32,
         });
+    } else {
+        return None;
+    }
+}
+
+/// # Arguments
+///
+/// * `sc_coord` - スクリーン座標
+///
+/// # Returns
+///
+/// 画像上の座標
+pub fn screen_to_image_f(settings: &Settings, sc_coord: &KusaPoint) -> Option<KusaPoint> {
+    // 画像上の座標
+    let im_x = (sc_coord.x - settings.canvas_margin_left) / settings.canvas_dot_width;
+    let im_y = (sc_coord.y - settings.canvas_margin_top) / settings.canvas_dot_height;
+
+    if 0.0 <= im_x
+        && im_x < settings.image_width as f64
+        && 0.0 <= im_y
+        && im_y < settings.image_height as f64
+    {
+        return Some(KusaPoint { x: im_x, y: im_y });
     } else {
         return None;
     }

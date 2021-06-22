@@ -23,5 +23,5 @@
         "b": 180,
         "a": 255
     },
-    "paint_thickness": 2
+    "paint_thickness": 2.0
 }

@@ -36,7 +36,7 @@ pub struct Settings {
     // 描画色
     pub paint_color: KusaColor,
     // 描画ツールの線の太さ
-    pub paint_thickness: u16,
+    pub paint_thickness: f64,
 }
 
 impl Default for Settings {
@@ -61,7 +61,7 @@ impl Default for Settings {
                 b: 180,
                 a: 255,
             },
-            paint_thickness: 1,
+            paint_thickness: 1.0,
         }
     }
 }
