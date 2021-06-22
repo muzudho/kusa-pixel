@@ -30,7 +30,7 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
     let mut input_state = InputState::default();
     let mut k_mouse_cursor = KusaPoint::default();
     let mut paint_tool = Pen {};
-    let mut paint_nib = SquareNib {};
+    let paint_nib = SquareNib {};
 
     let assets = find_folder::Search::ParentsThenKids(3, 3)
         .for_folder("assets")
@@ -82,7 +82,7 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
             input_state.previous_point.x = input_state.pressed_point.x;
             input_state.previous_point.y = input_state.pressed_point.y;
 
-            paint_tool.on_mouse_pressed(&settings, &input_state, k_image);
+            paint_tool.on_mouse_pressed(&settings, &paint_nib, &input_state, k_image);
         }
 
         // TODO ⚡Mouse move
@@ -100,7 +100,7 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
                 //);
             }
 
-            if paint_tool.on_mouse_moved(&settings, &input_state, k_image) {
+            if paint_tool.on_mouse_moved(&settings, &paint_nib, &input_state, k_image) {
                 if input_state.is_mouse_pressed {
                     // 更新
                     input_state.previous_point.x += input_state.moved_vector.x;

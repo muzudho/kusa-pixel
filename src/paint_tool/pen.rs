@@ -13,12 +13,12 @@ impl PaintTool for Pen {
     fn on_mouse_pressed(
         &self,
         settings: &Settings,
+        nib: &SquareNib,
         input_state: &InputState,
         k_image: &mut KusaImage,
     ) {
         if let Some(center) = screen_to_image_f(settings, &input_state.pressed_point) {
             // 点を置きます
-            let nib = SquareNib {};
             nib.put_pixel(&settings, k_image, &center);
 
             // 保存
@@ -28,12 +28,13 @@ impl PaintTool for Pen {
     fn on_mouse_moved(
         &self,
         settings: &Settings,
+        nib: &SquareNib,
         input_state: &InputState,
         k_image: &mut KusaImage,
     ) -> bool {
         if input_state.is_mouse_pressed {
             // 移動した区間に連続した点を置きます
-            if !self.draw_line(&settings, k_image, &input_state) {
+            if !self.draw_line(&settings, nib, k_image, &input_state) {
                 return false;
             }
             //println!(
@@ -73,6 +74,7 @@ impl Pen {
     fn draw_line(
         &self,
         settings: &Settings,
+        nib: &SquareNib,
         k_image: &mut KusaImage,
         input_state: &InputState,
     ) -> bool {
@@ -158,7 +160,6 @@ impl Pen {
                         {
                             // println!("Trace   | 水平移動 x={} y={}", x, y);
                             // 点を置きます
-                            let nib = SquareNib {};
                             nib.put_pixel(&settings, k_image, &KusaPoint { x: x, y: y });
                             //k_image.set_pixel(im_x as u32, im_y as u32, &settings.paint_color);
                         }
@@ -193,7 +194,6 @@ impl Pen {
                             && y < settings.image_height as f64
                         {
                             // 点を置きます
-                            let nib = SquareNib {};
                             nib.put_pixel(&settings, k_image, &KusaPoint { x: x, y: y });
                             // k_image.set_pixel(im_x as u32, im_y as u32, &settings.paint_color);
                         }
@@ -212,7 +212,6 @@ impl Pen {
                 }
 
                 // 終点を塗ります
-                let nib = SquareNib {};
                 nib.put_pixel(
                     &settings,
                     k_image,
