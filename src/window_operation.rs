@@ -182,7 +182,7 @@ pub fn show_window(mut settings: Settings, k_image: &mut KusaImage) {
             // TODO 座標を表示したいぜ☆（＾～＾）
             text::Text::new_color([0.0, 0.0, 0.0, 1.0], 32)
                 .draw(
-                    &format!("cell({:.0}, {:.0})", k_mouse_cursor.x, k_mouse_cursor.y),
+                    &format!("xy({:.0}, {:.0})", k_mouse_cursor.x, k_mouse_cursor.y),
                     &mut glyphs,
                     &c.draw_state,
                     c.transform.trans(10.0, 30.0), // y位置を揃えるのはむずかしいぜ☆（＾～＾）

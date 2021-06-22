@@ -195,6 +195,9 @@ impl Pen {
                     }
                 }
 
+                // 終点を塗ります
+                k_image.set_pixel(end_cell.x as u32, end_cell.y as u32, &settings.paint_color);
+
                 return true;
             }
             // 画像の外をクリックしていても無視します
