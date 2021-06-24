@@ -3,7 +3,8 @@ use crate::data::pointing::{KusaPoint, KusaSize};
 use crate::grid::Grid;
 use crate::paint_tool::circle_nib::CircleNib;
 use crate::paint_tool::pen::*;
-use crate::paint_tool::screen_to_image;
+use crate::paint_tool::point_nib::PointNib;
+use crate::paint_tool::screen_to_table;
 use crate::paint_tool::square_nib::SquareNib;
 use crate::paint_tool::Nib;
 use crate::paint_tool::PaintOperation;
@@ -34,6 +35,7 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
     let mut k_mouse_cursor = KusaPoint::default();
     let mut paint_tool = Pen {};
     let paint_nib: &dyn Nib = match settings.paint_nib.as_str() {
+        "Point" => &(PointNib {}) as &dyn Nib,
         "Square" => &(SquareNib {}) as &dyn Nib,
         "Circle" => &(CircleNib {}) as &dyn Nib,
         _ => &(SquareNib {}) as &dyn Nib,
@@ -209,9 +211,8 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
                     info_str += "Unsaved ";
                 }
                 // 座標を表示したいぜ☆（＾～＾）
-                if let Some(coord) = screen_to_image(&settings, &k_mouse_cursor) {
-                    info_str += &format!("xy({}, {}) ", coord.x, coord.y);
-                }
+                let coord = screen_to_table(&settings, &k_mouse_cursor);
+                info_str += &format!("Table({}, {}) ", coord.x, coord.y);
                 // 表示（＾～＾）
                 text::Text::new_color([0.0, 0.0, 0.0, 1.0], 32)
                     .draw(

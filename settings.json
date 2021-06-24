@@ -1,13 +1,13 @@
 {
     "image_file": "./work/image.png",
-    "image_width": 64,
-    "image_height": 64,
+    "image_width": 10,
+    "image_height": 10,
     "canvas_zoom": 1.0,
-    "canvas_margin_left": 100,
-    "canvas_margin_right": 100,
-    "canvas_margin_top": 100,
-    "canvas_margin_bottom": 100,
-    "canvas_cell_size": 30.0,
+    "canvas_margin_left": 50,
+    "canvas_margin_right": 50,
+    "canvas_margin_top": 50,
+    "canvas_margin_bottom": 50,
+    "canvas_cell_size": 20.0,
     "canvas_grid_thickness": 0.5,
     "canvas_grid_color": [
         0.0,
@@ -16,7 +16,7 @@
         1.0
     ],
     "paint_tool": "Pen",
-    "paint_nib": "Circle",
+    "paint_nib": "Point",
     "paint_color": {
         "r": 240,
         "g": 150,

@@ -23,7 +23,7 @@ impl Nib for SquareNib {
         let right = {
             let mut right = (center.x + radius).round() as i16;
             if settings.image_width as i16 <= right {
-                right = (settings.image_width - 1) as i16;
+                right = settings.image_width as i16; // - 1
             }
             right as i16
         };
@@ -39,7 +39,7 @@ impl Nib for SquareNib {
         let bottom = {
             let mut bottom = (center.y + radius).round() as i16;
             if settings.image_height as i16 <= bottom {
-                bottom = (settings.image_width - 1) as i16;
+                bottom = settings.image_width as i16; //  - 1
             }
             bottom as i16
         };
@@ -48,8 +48,8 @@ impl Nib for SquareNib {
         //     left, right, top, bottom
         // );
 
-        for y in top..bottom {
-            for x in left..right {
+        for y in top..(bottom + 1) {
+            for x in left..(right + 1) {
                 // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
                 k_image.set_pixel(x as u32, y as u32, &settings.paint_color);
             }

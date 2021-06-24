@@ -1,5 +1,6 @@
 pub mod circle_nib;
 pub mod pen;
+pub mod point_nib;
 pub mod square_nib;
 
 use crate::data::input_state::InputState;
@@ -43,23 +44,15 @@ pub trait Nib {
 /// # Returns
 ///
 /// 画像上の座標
-pub fn screen_to_image(settings: &Settings, sc_coord: &KusaPoint) -> Option<KusaCell> {
+pub fn screen_to_table(settings: &Settings, sc_coord: &KusaPoint) -> KusaCell {
     // 画像上の座標
     let im_x = (sc_coord.x - settings.canvas_margin_left) / settings.canvas_cell_size;
     let im_y = (sc_coord.y - settings.canvas_margin_top) / settings.canvas_cell_size;
 
-    if 0.0 <= im_x
-        && im_x < settings.image_width as f64
-        && 0.0 <= im_y
-        && im_y < settings.image_height as f64
-    {
-        return Some(KusaCell {
-            x: im_x as i32,
-            y: im_y as i32,
-        });
-    } else {
-        return None;
-    }
+    return KusaCell {
+        x: im_x as i32,
+        y: im_y as i32,
+    };
 }
 
 /// # Arguments
@@ -69,20 +62,12 @@ pub fn screen_to_image(settings: &Settings, sc_coord: &KusaPoint) -> Option<Kusa
 /// # Returns
 ///
 /// 画像上の座標
-pub fn screen_to_image_f(settings: &Settings, sc_coord: &KusaPoint) -> Option<KusaPoint> {
+pub fn screen_to_table_f(settings: &Settings, sc_coord: &KusaPoint) -> KusaPoint {
     // 画像上の座標
     let im_x = (sc_coord.x - settings.canvas_margin_left) / settings.canvas_cell_size;
     let im_y = (sc_coord.y - settings.canvas_margin_top) / settings.canvas_cell_size;
 
-    if 0.0 <= im_x
-        && im_x < settings.image_width as f64
-        && 0.0 <= im_y
-        && im_y < settings.image_height as f64
-    {
-        return Some(KusaPoint { x: im_x, y: im_y });
-    } else {
-        return None;
-    }
+    return KusaPoint { x: im_x, y: im_y };
 }
 
 pub struct PaintOperation {}

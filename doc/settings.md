@@ -80,10 +80,11 @@ Screen coordinate
 👆 Now it's just a pen. Draw a point  
 
 * paint_tool
-  * "Pen"
+  * `Pen` - Draw a point, Draw a line
 * paint_nib
-  * "Square"
-  * "Circle"
+  * `Point` - 1 pixel の点です
+  * `Square`
+  * `Circle`
 
 ```json
 {
