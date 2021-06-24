@@ -112,10 +112,10 @@ impl Pen {
                 let dy_len = dy.abs();
 
                 // 長い方の辺の長さ
-                let long_edge_len = if landscape { dx_len } else { dy_len };
+                let longer_side_len = if landscape { dx_len } else { dy_len };
 
                 // 長い方の辺の正負を返します。 1 or -1
-                let long_edge_sign = if landscape {
+                let longer_side_sign = if landscape {
                     if 0 <= dx {
                         1
                     } else {
@@ -129,7 +129,7 @@ impl Pen {
                     }
                 };
                 // 短い方の辺の比を返します
-                let short_edge_rate = if landscape {
+                let shorter_side_rate = if landscape {
                     if 0 < dx_len {
                         dy_len as f64 / dx_len as f64
                     } else {
@@ -145,10 +145,10 @@ impl Pen {
                 if landscape {
                     // 横幅の方が長ければ。
                     let draw_horizontal = &mut |interpolation_x: f64| {
-                        let interpolation_y = short_edge_rate * interpolation_x;
+                        let interpolation_y = shorter_side_rate * interpolation_x;
                         // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
-                        let x = previous_cell.x as f64 + interpolation_x;
-                        let y = previous_cell.y as f64 + interpolation_y;
+                        let x = input_state.previous_point.x as f64 + interpolation_x;
+                        let y = input_state.previous_point.y as f64 + interpolation_y;
                         if 0.0 <= x
                             && x < settings.image_width as f64
                             && 0.0 <= y
@@ -160,29 +160,29 @@ impl Pen {
                             //k_image.set_pixel(im_x as u32, im_y as u32, &settings.paint_color);
                         }
                     };
-                    if 0 <= long_edge_sign {
+                    if 0 <= longer_side_sign {
                         // println!("Trace   | 右へ☆（＾～＾） dx_len={}", dx_len);
-                        for x in 0..long_edge_len {
+                        for x in 0..longer_side_len {
                             draw_horizontal(x as f64);
                         }
                     } else {
                         //println!("Trace   | 左へ☆（＾～＾） ");
-                        for x in 0..long_edge_len {
-                            draw_horizontal(long_edge_sign as f64 * x as f64);
+                        for x in 0..longer_side_len {
+                            draw_horizontal(longer_side_sign as f64 * x as f64);
                         }
                     }
                 } else {
                     // 縦幅の方が長いか同じなら。
                     let draw_vertical = &mut |interpolation_y: f64| {
                         // println!(
-                        //     "Trace   | short_edge_rate={} interpolation_y={}",
-                        //     short_edge_rate, interpolation_y
+                        //     "Trace   | shorter_side_rate={} interpolation_y={}",
+                        //     shorter_side_rate, interpolation_y
                         // );
-                        let interpolation_x = short_edge_rate * interpolation_y;
+                        let interpolation_x = shorter_side_rate * interpolation_y;
                         //println!("Trace   | interpolation_x={}", interpolation_x,);
                         // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
-                        let x = previous_cell.x as f64 + interpolation_x;
-                        let y = previous_cell.y as f64 + interpolation_y;
+                        let x = input_state.previous_point.x as f64 + interpolation_x;
+                        let y = input_state.previous_point.y as f64 + interpolation_y;
                         //println!("Trace   | im_x={} im_y={}", im_x, im_y);
                         if 0.0 <= x
                             && x < settings.image_width as f64
@@ -194,15 +194,15 @@ impl Pen {
                             // k_image.set_pixel(im_x as u32, im_y as u32, &settings.paint_color);
                         }
                     };
-                    if 0 <= long_edge_sign {
+                    if 0 <= longer_side_sign {
                         //println!("Trace   | 下へ☆（＾～＾）");
-                        for y in 0..long_edge_len {
+                        for y in 0..longer_side_len {
                             draw_vertical(y as f64);
                         }
                     } else {
                         //println!("Trace   | 上へ☆（＾～＾）");
-                        for y in 0..long_edge_len {
-                            draw_vertical(long_edge_sign as f64 * y as f64);
+                        for y in 0..longer_side_len {
+                            draw_vertical(longer_side_sign as f64 * y as f64);
                         }
                     }
                 }

@@ -18,10 +18,10 @@
     "paint_tool": "Pen",
     "paint_nib": "Circle",
     "paint_color": {
-        "r": 230,
+        "r": 150,
         "g": 150,
-        "b": 190,
+        "b": 230,
         "a": 255
     },
-    "paint_thickness": 8.0
+    "paint_thickness": 1.0
 }
