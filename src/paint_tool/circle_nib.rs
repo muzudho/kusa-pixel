@@ -24,7 +24,7 @@ impl Nib for CircleNib {
         let right = {
             let mut right = (center.x + radius).round() as i16 + 1;
             if settings.image_width as i16 <= right {
-                right = (settings.image_width - 1) as i16;
+                right = settings.image_width as i16; //  - 1
             }
             right as i16
         };
@@ -40,7 +40,7 @@ impl Nib for CircleNib {
         let bottom = {
             let mut bottom = (center.y + radius).round() as i16 + 1;
             if settings.image_height as i16 <= bottom {
-                bottom = (settings.image_width - 1) as i16;
+                bottom = settings.image_width as i16; //  - 1
             }
             bottom as i16
         };

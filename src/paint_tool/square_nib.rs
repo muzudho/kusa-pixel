@@ -48,10 +48,16 @@ impl Nib for SquareNib {
         //     left, right, top, bottom
         // );
 
-        for y in top..(bottom + 1) {
-            for x in left..(right + 1) {
+        for y in top..bottom {
+            for x in left..right {
                 // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
+                // if 0 <= x
+                //     && x < settings.image_width as i16
+                //     && 0 <= y
+                //     && y < settings.image_height as i16
+                // {
                 k_image.set_pixel(x as u32, y as u32, &settings.paint_color);
+                //}
             }
         }
     }

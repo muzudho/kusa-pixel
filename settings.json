@@ -1,7 +1,7 @@
 {
     "image_file": "./work/image.png",
-    "image_width": 10,
-    "image_height": 10,
+    "image_width": 64,
+    "image_height": 64,
     "canvas_zoom": 1.0,
     "canvas_margin_left": 50,
     "canvas_margin_right": 50,
@@ -16,12 +16,12 @@
         1.0
     ],
     "paint_tool": "Pen",
-    "paint_nib": "Point",
+    "paint_nib": "Circle",
     "paint_color": {
         "r": 240,
-        "g": 150,
-        "b": 190,
+        "g": 170,
+        "b": 170,
         "a": 255
     },
-    "paint_thickness": 1.0
+    "paint_thickness": 8.0
 }
