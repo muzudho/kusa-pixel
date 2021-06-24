@@ -34,12 +34,7 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
     let mut input_state = InputState::default();
     let mut k_mouse_cursor = KusaPoint::default();
     let mut paint_tool = Pen {};
-    let paint_nib: &dyn Nib = match settings.paint_nib.as_str() {
-        "Point" => &(PointNib {}) as &dyn Nib,
-        "Square" => &(SquareNib {}) as &dyn Nib,
-        "Circle" => &(CircleNib {}) as &dyn Nib,
-        _ => &(SquareNib {}) as &dyn Nib,
-    };
+    let mut paint_nib: &dyn Nib = &PointNib {} as &dyn Nib;
 
     let assets = find_folder::Search::ParentsThenKids(3, 3)
         .for_folder("assets")
@@ -49,34 +44,13 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
         .load_font(assets.join("font/NotoSans-Medium.ttf"))
         .unwrap();
 
-    let mut count_to_reload: u64 = 0;
-    let mut count_to_save: u64 = 0;
+    const SAVE_COUNT: u16 = 200;
+    let mut count_to_save: u16 = SAVE_COUNT;
     // Event loop.
     window.set_lazy(true);
     // フレームではなく、イベントが起こると１つ進む（＾～＾）？
     while let Some(e) = window.next() {
         //println!("Trace   | window.next() time={}", count_to_reload); // FPSが分からん（＾～＾）
-        if count_to_reload % 120 == 119 {
-            // ミリ秒の取り方が分からなかったぜ☆（＾～＾）
-            // イベント・ループの中で　ファイル入出力するのは　クソだが　使い慣れてないんで仕方ないぜ☆（＾～＾）
-            // 設定ファイルを監視するぜ☆（＾～＾）
-            println!("Debug   | Reload settings");
-            settings = match Settings::load(&app.settings_path) {
-                Ok(x) => x,
-                Err(why) => panic!("Settings load fail: {}", why),
-            };
-            paint_tool = match settings.paint_tool.as_str() {
-                "Pen" => Pen {},
-                _ => Pen {},
-            };
-            //println!(
-            //    "Trace   | Load settings☆（＾～＾） paint_tool=|{}|",
-            //    settings.paint_tool
-            //);
-            count_to_reload = 0;
-        } else {
-            count_to_reload += 1;
-        }
         // マウスカーソルの座標を補足するぜ☆（＾～＾）
         e.mouse_cursor(|screen_coord| {
             k_mouse_cursor = KusaPoint::from_coord(screen_coord);
@@ -195,12 +169,37 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
             };
             Grid::draw(&settings, &canvas_size, &c, g);
 
-            if k_image.dirty && count_to_save % 128 == 0 {
-                // 保存
-                write_k_image(k_image, &settings.image_file);
-                count_to_save = 0;
+            if count_to_save == 0 {
+                // ミリ秒の取り方が分からなかったぜ☆（＾～＾）
+                // イベント・ループの中で　ファイル入出力するのは　クソだが　使い慣れてないんで仕方ないぜ☆（＾～＾）
+                // 設定ファイルを監視するぜ☆（＾～＾）
+                settings = match Settings::load(&app.settings_path) {
+                    Ok(x) => x,
+                    Err(why) => panic!("Settings load fail: {}", why),
+                };
+                paint_tool = match settings.paint_tool.as_str() {
+                    "Pen" => Pen {},
+                    _ => Pen {},
+                };
+                paint_nib = match settings.paint_nib.as_str() {
+                    "Point" => &PointNib {} as &dyn Nib,
+                    "Square" => &SquareNib {} as &dyn Nib,
+                    "Circle" => &CircleNib {} as &dyn Nib,
+                    _ => &(SquareNib {}) as &dyn Nib,
+                };
+                //println!(
+                //    "Trace   | Load settings☆（＾～＾） paint_tool=|{}|",
+                //    settings.paint_tool
+                //);
+
+                if k_image.dirty {
+                    // 画像の保存
+                    write_k_image(k_image, &settings.image_file);
+                }
+
+                count_to_save = SAVE_COUNT;
             } else {
-                count_to_save += 1;
+                count_to_save -= 1;
             }
 
             // 情報表示（＾～＾）
@@ -208,7 +207,7 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
                 let mut info_str = "".to_string();
                 // 画像の保存がまだなら表示（＾～＾）
                 if k_image.dirty {
-                    info_str += "Unsaved ";
+                    info_str += &format!("Unsaved{} ", count_to_save);
                 }
                 // 座標を表示したいぜ☆（＾～＾）
                 let coord = screen_to_table(&settings, &k_mouse_cursor);
