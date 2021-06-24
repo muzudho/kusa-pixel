@@ -76,8 +76,8 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
             count_to_reload += 1;
         }
         // マウスカーソルの座標を補足するぜ☆（＾～＾）
-        e.mouse_cursor(|coord| {
-            k_mouse_cursor = KusaPoint::from_coord(coord);
+        e.mouse_cursor(|screen_coord| {
+            k_mouse_cursor = KusaPoint::from_coord(screen_coord);
         });
 
         // 📖 [Event](http://docs.piston.rs/piston_window/piston_window/enum.Event.html)

@@ -96,12 +96,10 @@ impl Pen {
                 //println!("Trace   | landscape={}", landscape);
                 //println!("Trace   | end_cell=({} {})", end_cell.x, end_cell.y);
 
-                /*
                 // TODO previous と end が同じなら何もしません
                 if end_cell.x == previous_cell.x && end_cell.y == previous_cell.y {
                     return false;
                 }
-                */
 
                 // スクリーン上の長さを返します
                 let horizontal_len = end_point_x - input_state.previous_point.x;
@@ -156,8 +154,16 @@ impl Pen {
                     let draw_horizontal = &mut |interpolation_x: f64| {
                         let interpolation_y = shorter_side_rate * interpolation_x;
                         // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
-                        let x = input_state.previous_point.x as f64 + interpolation_x;
-                        let y = input_state.previous_point.y as f64 + interpolation_y;
+                        let x = (input_state.previous_point.x - settings.canvas_margin_left)
+                            / settings.canvas_cell_size
+                            + interpolation_x;
+                        let y = (input_state.previous_point.y - settings.canvas_margin_top)
+                            / settings.canvas_cell_size
+                            + interpolation_y;
+                        // println!(
+                        //     "Trace   | 水平移動 ({}, {}) : ({}, {})",
+                        //     x, y, settings.image_width, settings.image_height
+                        // );
                         if 0.0 <= x
                             && x < settings.image_width as f64
                             && 0.0 <= y
@@ -170,7 +176,10 @@ impl Pen {
                         }
                     };
                     if 0 <= longer_side_sign {
-                        // println!("Trace   | 右へ☆（＾～＾） dx_len={}", dx_len);
+                        // println!(
+                        //     "Trace   | 右へ☆（＾～＾） longer_side_cells={}",
+                        //     longer_side_cells
+                        // );
                         for x in 0..longer_side_cells {
                             draw_horizontal(x as f64);
                         }
@@ -190,8 +199,12 @@ impl Pen {
                         let interpolation_x = shorter_side_rate * interpolation_y;
                         //println!("Trace   | interpolation_x={}", interpolation_x,);
                         // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
-                        let x = input_state.previous_point.x as f64 + interpolation_x;
-                        let y = input_state.previous_point.y as f64 + interpolation_y;
+                        let x = (input_state.previous_point.x - settings.canvas_margin_left)
+                            / settings.canvas_cell_size
+                            + interpolation_x;
+                        let y = (input_state.previous_point.y - settings.canvas_margin_top)
+                            / settings.canvas_cell_size
+                            + interpolation_y;
                         //println!("Trace   | im_x={} im_y={}", im_x, im_y);
                         if 0.0 <= x
                             && x < settings.image_width as f64

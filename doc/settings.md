@@ -38,14 +38,15 @@ settings.json:
 
 ```json
 {
-    "canvas_margin_top": 10.0,
-    "canvas_margin_right": 20.0,
-    "canvas_margin_bottom": 10.0,
-    "canvas_margin_left": 20.0
+    "canvas_margin_top": 20,
+    "canvas_margin_right": 40,
+    "canvas_margin_bottom": 20,
+    "canvas_margin_left": 40
 }
 ```
 
-👆 Leave a gap of a few pixels between the border and the image  
+👆 Leave a gap of a few pixels between the border and the image.  
+Screen coordinate  
 
 ```json
 {
