@@ -45,12 +45,46 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
         .unwrap();
 
     const SAVE_COUNT: u16 = 200;
-    let mut count_to_save: u16 = SAVE_COUNT;
+    let mut count_to_save: u16 = 0;
     // Event loop.
     window.set_lazy(true);
     // フレームではなく、イベントが起こると１つ進む（＾～＾）？
     while let Some(e) = window.next() {
         //println!("Trace   | window.next() time={}", count_to_reload); // FPSが分からん（＾～＾）
+        // 先に更新する（＾～＾） 描画は１フレーム将来を見せている（＾～＾）
+        if count_to_save == 0 {
+            // ミリ秒の取り方が分からなかったぜ☆（＾～＾）
+            // イベント・ループの中で　ファイル入出力するのは　クソだが　使い慣れてないんで仕方ないぜ☆（＾～＾）
+            // 設定ファイルを監視するぜ☆（＾～＾）
+            settings = match Settings::load(&app.settings_path) {
+                Ok(x) => x,
+                Err(why) => panic!("Settings load fail: {}", why),
+            };
+            paint_tool = match settings.paint_tool.as_str() {
+                "Pen" => Pen {},
+                _ => Pen {},
+            };
+            paint_nib = match settings.paint_nib.as_str() {
+                "Point" => &PointNib {} as &dyn Nib,
+                "Square" => &SquareNib {} as &dyn Nib,
+                "Circle" => &CircleNib {} as &dyn Nib,
+                _ => &(SquareNib {}) as &dyn Nib,
+            };
+            //println!(
+            //    "Trace   | Load settings☆（＾～＾） paint_tool=|{}|",
+            //    settings.paint_tool
+            //);
+
+            if k_image.dirty {
+                // 画像の保存
+                write_k_image(k_image, &settings.image_file);
+            }
+
+            count_to_save = SAVE_COUNT;
+        } else {
+            count_to_save -= 1;
+        }
+
         // マウスカーソルの座標を補足するぜ☆（＾～＾）
         e.mouse_cursor(|screen_coord| {
             k_mouse_cursor = KusaPoint::from_coord(screen_coord);
@@ -169,39 +203,6 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
             };
             Grid::draw(&settings, &canvas_size, &c, g);
 
-            if count_to_save == 0 {
-                // ミリ秒の取り方が分からなかったぜ☆（＾～＾）
-                // イベント・ループの中で　ファイル入出力するのは　クソだが　使い慣れてないんで仕方ないぜ☆（＾～＾）
-                // 設定ファイルを監視するぜ☆（＾～＾）
-                settings = match Settings::load(&app.settings_path) {
-                    Ok(x) => x,
-                    Err(why) => panic!("Settings load fail: {}", why),
-                };
-                paint_tool = match settings.paint_tool.as_str() {
-                    "Pen" => Pen {},
-                    _ => Pen {},
-                };
-                paint_nib = match settings.paint_nib.as_str() {
-                    "Point" => &PointNib {} as &dyn Nib,
-                    "Square" => &SquareNib {} as &dyn Nib,
-                    "Circle" => &CircleNib {} as &dyn Nib,
-                    _ => &(SquareNib {}) as &dyn Nib,
-                };
-                //println!(
-                //    "Trace   | Load settings☆（＾～＾） paint_tool=|{}|",
-                //    settings.paint_tool
-                //);
-
-                if k_image.dirty {
-                    // 画像の保存
-                    write_k_image(k_image, &settings.image_file);
-                }
-
-                count_to_save = SAVE_COUNT;
-            } else {
-                count_to_save -= 1;
-            }
-
             // 情報表示（＾～＾）
             {
                 let mut info_str = "".to_string();
@@ -223,7 +224,6 @@ pub fn show_window(app: &KusaApp, mut settings: Settings, k_image: &mut KusaImag
                     )
                     .unwrap();
             }
-
             // Update glyphs before rendering.
             glyphs.factory.encoder.flush(device);
         });
