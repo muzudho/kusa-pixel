@@ -81,11 +81,14 @@ impl Pen {
             //     previous_cell.0, previous_cell.1
             // );
 
+            let end_point_x = input_state.previous_point.x + input_state.moved_vector.x;
+            let end_point_y = input_state.previous_point.y + input_state.moved_vector.y;
+
             if let Some(end_cell) = screen_to_image(
                 settings,
                 &KusaPoint {
-                    x: input_state.previous_point.x + input_state.moved_vector.x,
-                    y: input_state.previous_point.y + input_state.moved_vector.y,
+                    x: end_point_x,
+                    y: end_point_y,
                 },
             ) {
                 // 横長
@@ -93,14 +96,48 @@ impl Pen {
                 //println!("Trace   | landscape={}", landscape);
                 //println!("Trace   | end_cell=({} {})", end_cell.x, end_cell.y);
 
+                /*
                 // TODO previous と end が同じなら何もしません
                 if end_cell.x == previous_cell.x && end_cell.y == previous_cell.y {
                     return false;
                 }
+                */
+
+                // スクリーン上の長さを返します
+                let horizontal_len = end_point_x - input_state.previous_point.x;
+                let vertical_len = end_point_y - input_state.previous_point.y;
+                // 短い方の辺の比を返します
+                let shorter_side_rate = if landscape {
+                    if 0.0 < horizontal_len.abs() {
+                        vertical_len.abs() / horizontal_len.abs()
+                    } else {
+                        0.0
+                    }
+                } else {
+                    if 0.0 < vertical_len.abs() {
+                        horizontal_len.abs() / vertical_len.abs()
+                    } else {
+                        0.0
+                    }
+                };
+                // 長い方の辺の正負を返します。 1 or -1
+                let longer_side_sign = if landscape {
+                    if 0.0 <= horizontal_len {
+                        1
+                    } else {
+                        -1
+                    }
+                } else {
+                    if 0.0 <= vertical_len {
+                        1
+                    } else {
+                        -1
+                    }
+                };
 
                 // 画像上のピクセル数を返します
-                let dx = end_cell.x - previous_cell.x;
-                let dy = end_cell.y - previous_cell.y;
+                let d_columns = end_cell.x - previous_cell.x;
+                let d_rows = end_cell.y - previous_cell.y;
                 // println!(
                 //     "Trace   | dx={} end_cell.x={} previous_cell.0={}",
                 //     dx, end_cell.x, previous_cell.x
@@ -108,40 +145,12 @@ impl Pen {
 
                 // ずっと |1|未満 だと何も描かれないので、
                 // 1未満は 1に切り上げます。-1未満は-1に切り上げます
-                let dx_len = dx.abs();
-                let dy_len = dy.abs();
+                let d_columns_len = d_columns.abs();
+                let d_rows_len = d_rows.abs();
 
                 // 長い方の辺の長さ
-                let longer_side_len = if landscape { dx_len } else { dy_len };
+                let longer_side_cells = if landscape { d_columns_len } else { d_rows_len };
 
-                // 長い方の辺の正負を返します。 1 or -1
-                let longer_side_sign = if landscape {
-                    if 0 <= dx {
-                        1
-                    } else {
-                        -1
-                    }
-                } else {
-                    if 0 <= dy {
-                        1
-                    } else {
-                        -1
-                    }
-                };
-                // 短い方の辺の比を返します
-                let shorter_side_rate = if landscape {
-                    if 0 < dx_len {
-                        dy_len as f64 / dx_len as f64
-                    } else {
-                        0.0
-                    }
-                } else {
-                    if 0 < dy_len {
-                        dx_len as f64 / dy_len as f64
-                    } else {
-                        0.0
-                    }
-                };
                 if landscape {
                     // 横幅の方が長ければ。
                     let draw_horizontal = &mut |interpolation_x: f64| {
@@ -162,12 +171,12 @@ impl Pen {
                     };
                     if 0 <= longer_side_sign {
                         // println!("Trace   | 右へ☆（＾～＾） dx_len={}", dx_len);
-                        for x in 0..longer_side_len {
+                        for x in 0..longer_side_cells {
                             draw_horizontal(x as f64);
                         }
                     } else {
                         //println!("Trace   | 左へ☆（＾～＾） ");
-                        for x in 0..longer_side_len {
+                        for x in 0..longer_side_cells {
                             draw_horizontal(longer_side_sign as f64 * x as f64);
                         }
                     }
@@ -196,12 +205,12 @@ impl Pen {
                     };
                     if 0 <= longer_side_sign {
                         //println!("Trace   | 下へ☆（＾～＾）");
-                        for y in 0..longer_side_len {
+                        for y in 0..longer_side_cells {
                             draw_vertical(y as f64);
                         }
                     } else {
                         //println!("Trace   | 上へ☆（＾～＾）");
-                        for y in 0..longer_side_len {
+                        for y in 0..longer_side_cells {
                             draw_vertical(longer_side_sign as f64 * y as f64);
                         }
                     }

@@ -19,8 +19,8 @@
 
 ![20210622blog8a1.png](./img/20210622blog8a1.png)  
 
-* `A` - DX
-* `B` - DY
+* `A` - D Columns
+* `B` - D Rows
 
 ## 微小な移動
 
