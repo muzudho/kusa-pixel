@@ -61,19 +61,19 @@ impl Nib for CircleNib {
                 if radius2 < radius {
                     // 点を１個打って画像として保存するぜ☆（＾～＾）画面への描画は別のところでやってるぜ☆（＾～＾）
                     k_image.set_pixel(x as u32, y as u32, &settings.paint_color);
+                } else {
                     /*
-                    } else {
-                        k_image.set_pixel(
-                            x as u32,
-                            y as u32,
-                            &KusaColor {
-                                r: 0,
-                                g: 0,
-                                b: 0,
-                                a: 255,
-                            },
-                        );
-                        */
+                    k_image.set_pixel(
+                        x as u32,
+                        y as u32,
+                        &KusaColor {
+                            r: 0,
+                            g: 0,
+                            b: 0,
+                            a: 255,
+                        },
+                    );
+                    */
                 }
             }
         }
